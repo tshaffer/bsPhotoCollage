@@ -62,23 +62,33 @@ class BsPhotoCollageComponent extends React.Component<
     console.log(this.canvasRef);
 
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
-      // const canvas = this.canvasRef.current;
+
       const context = this.ctx;
-      const downloadingImage = new Image();
-      downloadingImage.onload = () => {
-        context.imageSmoothingEnabled = false;
-        context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
-        context.drawImage(downloadingImage, 0, 0);
+      context.imageSmoothingEnabled = false;
+      context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
+
+      const natureImage = new Image();
+      natureImage.onload = () => {
+        context.drawImage(natureImage, 0, 0);
       };
-      downloadingImage.src = 'nature.jpg';
+      natureImage.src = 'nature.jpg';
+
+      const lionImage = new Image();
+      lionImage.onload = () => {
+        context.drawImage(lionImage, 551, 0);
+      };
+      lionImage.src = 'lion.png';
+
     }
 
+    // 551x310
+    // 420x420
     return (
       <div>
         <canvas
           id='flibbet'
-          width='551'
-          height='310'
+          width='971'
+          height='420'
           ref={this.setCanvasRef}
         />
         pizza
