@@ -53,6 +53,9 @@ class BsPhotoCollageComponent extends React.Component<
     });
   }
 
+  imageLoaded() {
+
+  }
   render() {
 
     console.log('render');
@@ -61,15 +64,21 @@ class BsPhotoCollageComponent extends React.Component<
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
       // const canvas = this.canvasRef.current;
       const context = this.ctx;
-      // Our first draw
-      context.fillStyle = '#000000';
-      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+      const downloadingImage = new Image();
+      downloadingImage.onload = () => {
+        context.imageSmoothingEnabled = false;
+        context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
+        context.drawImage(downloadingImage, 0, 0);
+      };
+      downloadingImage.src = 'nature.jpg';
     }
 
     return (
       <div>
         <canvas
           id='flibbet'
+          width='551'
+          height='310'
           ref={this.setCanvasRef}
         />
         pizza
