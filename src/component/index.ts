@@ -1,1 +1,1 @@
-export * from './BsPhotoCollage';
+export * from './PhotoCollage';

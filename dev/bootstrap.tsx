@@ -9,19 +9,19 @@ import 'normalize.css/normalize.css';
 import 'flexboxgrid/dist/flexboxgrid.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
-import { BsPhotoCollageState } from '../src/type';
-import { bsPhotoCollageReducer } from '../src/model';
-import { initPhotoCollage } from '../src//controller';
+import { PhotoCollageState } from '../src/type';
+import { photoCollageReducer } from '../src/model';
+import { init } from '../src//controller';
 import {
-  BsPhotoCollage,
+  PhotoCollage,
 } from '../src/component';
 
 const getStore = () => {
   console.log('***************************** getStore() invoked');
-  const reducers = combineReducers<BsPhotoCollageState>({
-    bsPhotoCollage: bsPhotoCollageReducer,
+  const reducers = combineReducers<PhotoCollageState>({
+    bsPhotoCollage: photoCollageReducer,
   });
-  return createStore<BsPhotoCollageState>(
+  return createStore<PhotoCollageState>(
     reducers,
     composeWithDevTools(
       applyMiddleware(
@@ -32,11 +32,11 @@ const getStore = () => {
 
 const store = getStore();
 
-store.dispatch(initPhotoCollage(store));
+store.dispatch(init(store));
 
 ReactDOM.render(
   <Provider store={store}>
-    <BsPhotoCollage />
+    <PhotoCollage />
   </Provider>,
   document.getElementById('root') as HTMLElement
 );

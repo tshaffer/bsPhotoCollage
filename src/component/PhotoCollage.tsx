@@ -4,15 +4,15 @@ import { Dispatch, bindActionCreators } from 'redux';
 const fs = require('fs');
 
 import {
-  BsPhotoCollageState,
+  PhotoCollageState,
 } from '../type';
 import { isNil } from 'lodash';
 
-export interface BsPhotoCollageProps {
+export interface PhotoCollageProps {
   toppings: string;
 }
 
-export interface BsPhotoCollageComponentState {
+export interface PhotoCollageComponentState {
   note: string;
 }
 
@@ -20,18 +20,14 @@ export interface BsPhotoCollageComponentState {
 // Component
 // -----------------------------------------------------------------------
 
-class BsPhotoCollageComponent extends React.Component<
-  BsPhotoCollageProps,
-  BsPhotoCollageComponentState
+class PhotoCollageComponent extends React.Component<
+  PhotoCollageProps,
+  PhotoCollageComponentState
   > {
 
   canvasRef: any;
   setCanvasRef: any;
   ctx: any;
-
-  fileWritten: boolean;
-  natureDrawn: boolean;
-  lionDrawn: boolean;
 
   constructor(props: any) {
     super(props);
@@ -44,10 +40,6 @@ class BsPhotoCollageComponent extends React.Component<
       this.canvasRef = element;
       this.ctx = element.getContext('2d');
     };
-
-    this.fileWritten = false;
-    this.natureDrawn = false;
-    this.lionDrawn = false;
   }
 
   componentDidMount() {
@@ -59,23 +51,6 @@ class BsPhotoCollageComponent extends React.Component<
     this.setState({
       note: 'mounted',
     });
-  }
-
-  // 
-  writeFile() {
-    if (!this.fileWritten) {
-      // const img1 = this.ctx.getImageData(0, 0, 971, 420);
-      // const data = img1.data;
-      // const buffer = new ArrayBuffer(data.length);
-      // const binary = new Uint8Array(buffer);
-      // for (let i = 0; i < binary.length; i++) {
-      //   binary[i] = data[i];
-      // }
-      // // const buffer = imageData.data.buffer;
-      // // const buffer = this.canvasRef.toBuffer('image/png');
-      // fs.writeFileSync('./flibbet.png', binary);
-      // this.fileWritten = true;
-    }
   }
 
   render() {
@@ -92,22 +67,12 @@ class BsPhotoCollageComponent extends React.Component<
       const natureImage = new Image();
       natureImage.onload = () => {
         context.drawImage(natureImage, 0, 0);
-        if (this.lionDrawn) {
-          this.writeFile();
-        } else {
-          this.natureDrawn = true;
-        }
       };
       natureImage.src = 'nature.jpg';
 
       const lionImage = new Image();
       lionImage.onload = () => {
         context.drawImage(lionImage, 551, 0);
-        if (this.natureDrawn) {
-          this.writeFile();
-        } else {
-          this.lionDrawn = true;
-        }
       };
       lionImage.src = 'lion.png';
 
@@ -134,7 +99,7 @@ class BsPhotoCollageComponent extends React.Component<
 // Container
 // -----------------------------------------------------------------------
 
-function mapStateToProps(state: BsPhotoCollageState): Partial<any> {
+function mapStateToProps(state: PhotoCollageState): Partial<any> {
   return {
   };
 }
@@ -144,4 +109,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   }, dispatch);
 };
 
-export const BsPhotoCollage = connect(mapStateToProps, mapDispatchToProps)(BsPhotoCollageComponent);
+export const PhotoCollage = connect(mapStateToProps, mapDispatchToProps)(PhotoCollageComponent);

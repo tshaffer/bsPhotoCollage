@@ -1,10 +1,11 @@
 import { Store } from 'redux';
+import { PhotoCollageState } from '../type';
 
-import { BsPhotoCollageState } from '../type/base';
-
-export function initPhotoCollage(store: Store<BsPhotoCollageState>) {
-  console.log('initPhotoCollage invoked');
+export function init(store: Store<PhotoCollageState>) {
+  console.log('init invoked');
   return ((dispatch: any) => {
-    console.log('initPhotoCollage dispatched');
+    console.log('init dispatched');
+
+    // set filePath of directory that is the root of the photo's
   });
 }

@@ -1,66 +1,22 @@
 /** @module Model:base */
 
 import {
-  Reducer,
   combineReducers
 } from 'redux';
-import { isNil } from 'lodash';
-import { BsPhotoCollageModelState } from '../type';
-import {
-  BsPhotoCollageModelBaseAction,
-} from './baseAction';
-import { photosReducer } from './photos';
-
-// -----------------------------------------------------------------------
-// Defaults
-// -----------------------------------------------------------------------
-
-// none
+import { PhotoCollageState } from '../type';
+import { photoCollageReducer } from './photoCollage';
+import { photoCollageAttributesReducer } from './photoCollageAttributes';
+import { photoCollageSpecsReducer } from './photoCollageSpecs';
 
 // -----------------------------------------------------------------------
 // Reducers
 // -----------------------------------------------------------------------
-
-/** @internal */
-/** @private */
-export type BsUiReducer = Reducer<BsPhotoCollageModelState>;
-
-/** @internal */
-/** @private */
-export const enableBatching = (
-  reduce: (state: BsPhotoCollageModelState, action: BsPhotoCollageModelBaseAction ) => BsPhotoCollageModelState,
-): BsUiReducer => {
-  return function batchingReducer(
-    state: BsPhotoCollageModelState,
-    action: BsPhotoCollageModelBaseAction,
-  ): BsPhotoCollageModelState {
-    switch (action.type) {
-      default:
-        return reduce(state, action);
-    }
-  };
-};
-
-export const bsPhotoCollageReducer = enableBatching(combineReducers<BsPhotoCollageModelState>({
-  photos: photosReducer,
-}));
+export const rootReducer = combineReducers<PhotoCollageState>({
+  photoCollageAttributes: photoCollageAttributesReducer,
+  photoCollageSpecs: photoCollageSpecsReducer,
+  photoCollage: photoCollageReducer,
+});
 
 // -----------------------------------------------------------------------
 // Validators
 // -----------------------------------------------------------------------
-
-/** @internal */
-/** @private */
-// TEDTODO - requires further development
-// export function isValidBsPhotoCollageModelState(state: any): boolean {
-//   return !isNil(state)
-//   && state.hasOwnProperty('arDataFeeds') && isValidDataFeedState(state.arDataFeeds);
-
-// }
-
-/** @internal */
-/** @private */
-// TEDTODO - requires further development
-export function isValidBsPhotoCollageModelStateShallow(state: any): boolean {
-  return !isNil(state);
-}

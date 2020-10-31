@@ -2,4 +2,6 @@
 
 export * from './baseAction';
 export * from './baseReducer';
-export * from './photos';
+export * from './photoCollage';
+export * from './photoCollageAttributes';
+export * from './photoCollageSpecs';

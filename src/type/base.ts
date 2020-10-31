@@ -1,15 +1,25 @@
-export type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-export interface BsPhotoCollageState {
-  bsPhotoCollage: BsPhotoCollageModelState;
+export interface PhotoCollageState {
+  photosCollageAttributes: PhotoCollageAttributes;
+  photoCollageSpecs: PhotoCollageSpec[];
+  photoCollage: PhotoCollageItem[];
 }
 
-export interface BsPhotoCollageModelState {
-  photos: PhotosState;
+export interface PhotoCollageAttributes {
+  photosRootDirectory: string;
 }
 
-export interface PhotosState {
-  fileName: string;
+export interface PhotoCollageSpec {
+  photoInCollageSpecs: PhotoInCollageSpec[];
+}
+
+export interface PhotoInCollageSpec {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  landscapeOrientation: boolean;
+}
+
+export interface PhotoCollageItem {
+  filePath: string;
 }
