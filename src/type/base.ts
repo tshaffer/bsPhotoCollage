@@ -1,7 +1,8 @@
 export interface PhotoCollageState {
-  photosCollageAttributes: PhotoCollageAttributes;
+  photoCollageAttributes: PhotoCollageAttributes;
   photoCollageSpecs: PhotoCollageSpec[];
   photoCollage: PhotoCollageItem[];
+  photoCollection: PhotoCollection;
 }
 
 export interface PhotoCollageAttributes {
@@ -22,4 +23,19 @@ export interface PhotoInCollageSpec {
 
 export interface PhotoCollageItem {
   filePath: string;
+}
+
+export interface PhotoCollection {
+  mediaItemsById: PhotosCollectionLUT;
+  albums: any;
+  photosInCollection: PhotoInCollection[] | null;
+}
+
+export interface PhotosCollectionLUT { [id: string]: PhotoInCollection; }
+
+export interface PhotoInCollection {
+  id: string;
+  fileName: string;
+  height: number;
+  width: number | null;
 }

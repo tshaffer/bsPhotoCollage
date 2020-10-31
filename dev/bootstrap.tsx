@@ -43,7 +43,8 @@ const store = createStore(
 
 // const store = getStore();
 
-store.dispatch(init(store));
+// store.dispatch(init(store));
+store.dispatch(init());
 
 ReactDOM.render(
   <Provider store={store}>
