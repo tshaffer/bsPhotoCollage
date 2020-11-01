@@ -1,6 +1,7 @@
 import { 
   PhotoCollageState,
-  PhotoCollageAttributes
+  PhotoCollageAttributes,
+  PhotoCollection
  } from '../type';
 
 export const getPhotoCollageAttributes = (state: PhotoCollageState): PhotoCollageAttributes => {
@@ -9,4 +10,8 @@ export const getPhotoCollageAttributes = (state: PhotoCollageState): PhotoCollag
 
 export const getPhotosRootDirectory = (state: PhotoCollageState): string => {
   return getPhotoCollageAttributes(state).photosRootDirectory;
+};
+
+export const getPhotoCollection = (state: PhotoCollageState): PhotoCollection => {
+  return state.photoCollection;
 };

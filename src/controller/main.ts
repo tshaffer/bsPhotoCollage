@@ -2,7 +2,7 @@ import { Store } from 'redux';
 import { PhotoCollageAttributes, PhotoCollageState } from '../type';
 
 import { setPhotosRootDirectory } from '../model';
-import { readPhotoCollection } from './photoCollection';
+import { readPhotoCollection, updateImageSizes } from './photoCollection';
 
 export function init() {
   console.log('init invoked');
@@ -12,5 +12,8 @@ export function init() {
     dispatch(setPhotosRootDirectory('/Volumes/SHAFFEROTO/mediaItems'));
 
     dispatch(readPhotoCollection());
+
+    // one time operation to update the manifest with the correct dimensions
+    // dispatch(updateImageSizes());
   });
 }
