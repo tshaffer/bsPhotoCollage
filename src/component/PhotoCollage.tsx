@@ -95,9 +95,19 @@ class PhotoCollageComponent extends React.Component<
   renderPhoto(filePath: string, x: number, y: number, width: number, height: number) {
     const photo = new Image();
     photo.onload = () => {
-      this.ctx.drawImage(photo, x, y, width, height);
+      // this.ctx.drawImage(photo, x, y, width, height);
+      this.scaleToFit(photo, x, y, width, height);
     };
     photo.src = filePath;
+  }
+
+  scaleToFit(photo: any, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) {
+    // get the scale
+    const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
+    // get the top left position of the image
+    const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
+    const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
+    this.ctx.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
   }
 
   getScaledCoordinates(x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, screenWidth: number, screenHeight: number): any {
