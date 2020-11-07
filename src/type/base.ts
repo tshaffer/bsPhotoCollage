@@ -10,7 +10,9 @@ export interface PhotoCollageAttributes {
 }
 
 export interface PhotoCollageSpec {
-  photoInCollageSpecs: PhotoInCollageSpec[];
+  width: number;
+  height: number;
+  photosInCollageSpecs: PhotoInCollageSpec[];
 }
 
 export interface PhotoInCollageSpec {
@@ -18,7 +20,6 @@ export interface PhotoInCollageSpec {
   y: number;
   width: number;
   height: number;
-  landscapeOrientation: boolean;
 }
 
 export interface PhotoCollageItem {
