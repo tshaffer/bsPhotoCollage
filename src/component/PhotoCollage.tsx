@@ -87,11 +87,24 @@ class PhotoCollageComponent extends React.Component<
     }
   }
 
-  getFilePathFromPhotoId(id: string): string {
-    return '';
+  renderPhoto(filePath: string, x: number, y: number) {
+    const photo = new Image();
+    photo.onload = () => {
+      this.ctx.drawImage(photo, x, y);
+    };
+    photo.src = filePath;
   }
 
-  getPhotosInCollage() {
+  getScaledCoordinates(x: number, y: number, collageWidth: number, collageHeight: number, screenWidth: number, screenHeight: number): any {
+    const screenX = (x / collageWidth) * screenWidth;
+    const screenY = (y / collageHeight) * screenHeight;
+    return {
+      x: screenX,
+      y: screenY,
+    };
+  }
+
+  renderPhotosInCollage() {
     const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
@@ -100,51 +113,37 @@ class PhotoCollageComponent extends React.Component<
       console.log('photo: ', photoInCollection);
       console.log(this.props.photoCollection);
       const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      const screenCoordinates = this.getScaledCoordinates(x, y, collageWidth, collageHeight, 1920, 1080);
+      this.renderPhoto(filePath, screenCoordinates.x, screenCoordinates.y);
     }
   }
 
-  // for each photo, need
-  //    filePath
-  //    width
-  //    height
   renderPhotoCollage() {
     if (isNil(this.props.photoCollageSpec) ||
       isNil(this.props.photoCollection) ||
       isNil(this.props.photoCollection!.photosInCollection) ||
       this.props.photoCollection.photosInCollection.length === 0) {
       console.log('no photoCollageSpec or no photosInCollection');
-      return null;
-    } else {
-      this.getPhotosInCollage();
-      return null;
+      return;
     }
+    this.renderPhotosInCollage();
   }
 
   render() {
 
     console.log('render');
     console.log(this.canvasRef);
-    
-    const poo = this.renderPhotoCollage();
+
 
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
-
       const context = this.ctx;
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
 
-      const natureImage = new Image();
-      natureImage.onload = () => {
-        context.drawImage(natureImage, 0, 0);
-      };
-      natureImage.src = 'nature.jpg';
+      this.renderPhotoCollage();
 
-      const lionImage = new Image();
-      lionImage.onload = () => {
-        context.drawImage(lionImage, 551, 0);
-      };
-      lionImage.src = 'lion.png';
-
+      // this.renderPhoto('nature.jpg', 0, 0);
+      // this.renderPhoto('lion.png', 551, 0);
     }
 
     // 551x310
