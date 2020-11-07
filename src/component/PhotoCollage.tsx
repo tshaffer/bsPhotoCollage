@@ -91,13 +91,6 @@ class PhotoCollageComponent extends React.Component<
   }
 
   renderPhoto(filePath: string, x: number, y: number) {
-    // const index = this.photoImages.length;
-    // this.photoImages.push(new Image());
-    // this.photoImages[index].onload = () => {
-    //   this.ctx.drawImage(this.photoImages[index], x, y);
-    // };
-    // this.photoImages[index].src = filePath;
-
     const photo = new Image();
     photo.onload = () => {
       this.ctx.drawImage(photo, x, y);
@@ -152,16 +145,8 @@ class PhotoCollageComponent extends React.Component<
       context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
 
       this.renderPhotoCollage();
-
-      // this.renderPhoto('nature.jpg', 0, 0);
-      // this.renderPhoto('lion.png', 551, 0);
-      // this.renderPhoto('/Volumes/SHAFFEROTO/mediaItems/M/Q/AEEKk9308hS9rwQqpcWwZzJcrluxRoe0-XK4GJ0cvJvSFjutArriKgjc6ryNGbNQD_g7o5QSXOAWp0nQPmFUsmjLqND1kTNdMQ.jpg', 0, 0);
-      // this.renderPhoto('AEEKk90lblixn0pzflfyRgmLCVu36qCGJ2zpUSdXH47Xe5GD0sGAvW0.jpg', 0, 0);
-      // this.renderPhoto('file:////Volumes/SHAFFEROTO/mediaItems/W/0/AEEKk90lblixn0pzflfyRgmLCVu36qCGJ2zpUSdXH47Xe5GD0sGAvW0.jpg', 0, 0);
     }
 
-    // 551x310
-    // 420x420
     return (
       <div>
         <canvas
