@@ -7,11 +7,12 @@ export interface PhotoCollageState {
 
 export interface PhotoCollageAttributes {
   photosRootDirectory: string;
+  photoCollageSpecIndex: number;
 }
 
 export interface PhotoCollageSpec {
-  width: number;
-  height: number;
+  collageWidth: number;
+  collageHeight: number;
   photosInCollageSpecs: PhotoInCollageSpec[];
 }
 

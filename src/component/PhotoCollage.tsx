@@ -1,19 +1,31 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
-const fs = require('fs');
+
+import { isNil } from 'lodash';
 
 import {
   PhotoCollageState,
+  PhotoCollageSpec,
+  PhotoInCollageSpec,
+  PhotoCollection,
 } from '../type';
-import { isNil } from 'lodash';
-
-export interface PhotoCollageProps {
-  toppings: string;
-}
+import { getActivePhotoCollageSpec } from '../selector';
+import { getPhotoCollection } from '../selector';
 
 export interface PhotoCollageComponentState {
   note: string;
+}
+
+// -----------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------
+
+/** @internal */
+/** @private */
+export interface PhotoCollageProps {
+  photoCollageSpec: PhotoCollageSpec | null;
+  photoCollection: PhotoCollection;
 }
 
 // -----------------------------------------------------------------------
@@ -53,11 +65,32 @@ class PhotoCollageComponent extends React.Component<
     });
   }
 
+  renderPhotoCollage() {
+    if (isNil(this.props.photoCollageSpec) ||
+      isNil(this.props.photoCollection) ||
+      isNil(this.props.photoCollection!.photosInCollection) ||
+      this.props.photoCollection.photosInCollection.length === 0) {
+      console.log('no photoCollageSpec or no photosInCollection');
+      return null;
+    } else {
+      const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec;
+      for (const photosInCollageSpec of photosInCollageSpecs) {
+        const { x, y, width, height } = photosInCollageSpec;
+
+        console.log('number of photos in collection: ', this.props.photoCollection.photosInCollection.length);
+
+        // get a random photo with the same orientation as the spec
+        console.log('get random photo: ', x, y, width, height);
+      }
+      return null;
+    }
+  }
+
   render() {
 
     console.log('render');
     console.log(this.canvasRef);
-
+    
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
 
       const context = this.ctx;
@@ -99,8 +132,10 @@ class PhotoCollageComponent extends React.Component<
 // Container
 // -----------------------------------------------------------------------
 
-function mapStateToProps(state: PhotoCollageState): Partial<any> {
+function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageProps> {
   return {
+    photoCollageSpec: getActivePhotoCollageSpec(state),
+    photoCollection: getPhotoCollection(state),
   };
 }
 

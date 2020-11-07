@@ -1,9 +1,11 @@
 import { Store } from 'redux';
 import { PhotoCollageAttributes, PhotoCollageSpec, PhotoCollageState, PhotoInCollageSpec } from '../type';
 
-import { addPhotosCollageSpecs, setPhotosRootDirectory } from '../model';
-import { readPhotoCollection, updateImageSizes } from './photoCollection';
-import { photoCollageSpecsReducer } from '../../dist/electron';
+import { addPhotosCollageSpecs, setPhotoCollageSpecIndex, setPhotosRootDirectory } from '../model';
+import {
+  readPhotoCollection, 
+  // updateImageSizes,
+} from './photoCollection';
 
 export function init() {
   console.log('init invoked');
@@ -18,14 +20,15 @@ export function init() {
     // dispatch(updateImageSizes());
 
     dispatch(addPhotoCollageSpecs());
+    dispatch(setPhotoCollageSpecIndex(0));
   });
 }
 
 const addPhotoCollageSpecs = () => {
   return ((dispatch: any, getState: any) => {
     const photoCollageSpec: PhotoCollageSpec = {
-      width: 16,
-      height: 10,
+      collageWidth: 16,
+      collageHeight: 10,
       photosInCollageSpecs: [
         {
           x: 0,
