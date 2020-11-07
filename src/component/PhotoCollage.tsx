@@ -43,6 +43,7 @@ class PhotoCollageComponent extends React.Component<
   canvasRef: any;
   setCanvasRef: any;
   ctx: any;
+  photoImages: any[];
 
   constructor(props: any) {
     super(props);
@@ -50,6 +51,8 @@ class PhotoCollageComponent extends React.Component<
     this.state = {
       note: 'noNote',
     };
+
+    this.photoImages = [];
 
     this.setCanvasRef = (element: any) => {
       this.canvasRef = element;
@@ -88,6 +91,13 @@ class PhotoCollageComponent extends React.Component<
   }
 
   renderPhoto(filePath: string, x: number, y: number) {
+    // const index = this.photoImages.length;
+    // this.photoImages.push(new Image());
+    // this.photoImages[index].onload = () => {
+    //   this.ctx.drawImage(this.photoImages[index], x, y);
+    // };
+    // this.photoImages[index].src = filePath;
+
     const photo = new Image();
     photo.onload = () => {
       this.ctx.drawImage(photo, x, y);
@@ -105,6 +115,7 @@ class PhotoCollageComponent extends React.Component<
   }
 
   renderPhotosInCollage() {
+    this.photoImages = [];
     const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
@@ -114,7 +125,7 @@ class PhotoCollageComponent extends React.Component<
       console.log(this.props.photoCollection);
       const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
       const screenCoordinates = this.getScaledCoordinates(x, y, collageWidth, collageHeight, 1920, 1080);
-      this.renderPhoto(filePath, screenCoordinates.x, screenCoordinates.y);
+      this.renderPhoto('file:///' + filePath, screenCoordinates.x, screenCoordinates.y);
     }
   }
 
@@ -144,6 +155,9 @@ class PhotoCollageComponent extends React.Component<
 
       // this.renderPhoto('nature.jpg', 0, 0);
       // this.renderPhoto('lion.png', 551, 0);
+      // this.renderPhoto('/Volumes/SHAFFEROTO/mediaItems/M/Q/AEEKk9308hS9rwQqpcWwZzJcrluxRoe0-XK4GJ0cvJvSFjutArriKgjc6ryNGbNQD_g7o5QSXOAWp0nQPmFUsmjLqND1kTNdMQ.jpg', 0, 0);
+      // this.renderPhoto('AEEKk90lblixn0pzflfyRgmLCVu36qCGJ2zpUSdXH47Xe5GD0sGAvW0.jpg', 0, 0);
+      // this.renderPhoto('file:////Volumes/SHAFFEROTO/mediaItems/W/0/AEEKk90lblixn0pzflfyRgmLCVu36qCGJ2zpUSdXH47Xe5GD0sGAvW0.jpg', 0, 0);
     }
 
     // 551x310
@@ -152,8 +166,8 @@ class PhotoCollageComponent extends React.Component<
       <div>
         <canvas
           id='flibbet'
-          width='971'
-          height='420'
+          width='1920'
+          height='1080'
           ref={this.setCanvasRef}
         />
         pizza
