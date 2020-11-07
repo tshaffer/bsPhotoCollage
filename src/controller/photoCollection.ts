@@ -5,6 +5,7 @@ import * as sizeOf from 'image-size';
 import { getPhotoCollection, getPhotosRootDirectory } from '../selector';
 import { PhotoCollageState, PhotoCollection, PhotoInCollection } from '../type';
 import { setPhotoCollection } from '../model';
+import { getFilePathFromPhotoInCollection } from '../utilities';
 
 export function readPhotoCollection() {
   console.log('readPhotoCollection invoked');
@@ -65,16 +66,6 @@ export function updateImageSizes() {
 
     console.log('updateImageSizes complete');
   });
-}
-
-export function getFilePathFromPhotoInCollection(photosRootDirectory: string, photoInCollection: PhotoInCollection): string {
-  const dirPath = isomorphicPath.join(photosRootDirectory, getRelativePathFromHash(photoInCollection.id));
-  const filePath = isomorphicPath.join(dirPath, photoInCollection.id + '.jpg');
-  return filePath;
-}
-
-export function getRelativePathFromHash(hash: string): string {
-  return isomorphicPath.join(hash.charAt(hash.length - 2), hash.charAt(hash.length - 1));
 }
 
 function fsSaveObjectAsLocalJsonFile(data: object, fullPath: string) {

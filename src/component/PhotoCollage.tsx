@@ -9,9 +9,11 @@ import {
   PhotoCollageSpec,
   PhotoInCollageSpec,
   PhotoCollection,
+  PhotoInCollection,
 } from '../type';
-import { getActivePhotoCollageSpec } from '../selector';
+import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
+import { getFilePathFromPhotoInCollection } from '../utilities';
 
 export interface PhotoCollageComponentState {
   note: string;
@@ -24,8 +26,9 @@ export interface PhotoCollageComponentState {
 /** @internal */
 /** @private */
 export interface PhotoCollageProps {
-  photoCollageSpec: PhotoCollageSpec | null;
+  photosRootDirectory: string;
   photoCollection: PhotoCollection;
+  photoCollageSpec: PhotoCollageSpec | null;
 }
 
 // -----------------------------------------------------------------------
@@ -65,6 +68,45 @@ class PhotoCollageComponent extends React.Component<
     });
   }
 
+  getRandomInt(max: number): number {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  getPhoto(landscape: boolean): PhotoInCollection {
+
+    const photosInCollection: PhotoInCollection[] = this.props.photoCollection.photosInCollection!;
+    const numPhotos = photosInCollection.length;
+
+    while (true) {
+      const randomInt = this.getRandomInt(numPhotos);
+      const photoInCollection: PhotoInCollection = photosInCollection[randomInt];
+      const landscapeOrientation: boolean = photoInCollection.width! >= photoInCollection.height;
+      if (landscape === landscapeOrientation) {
+        return photoInCollection;
+      }
+    }
+  }
+
+  getFilePathFromPhotoId(id: string): string {
+    return '';
+  }
+
+  getPhotosInCollage() {
+    const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
+    for (const photosInCollageSpec of photosInCollageSpecs) {
+      const { x, y, width, height } = photosInCollageSpec;
+
+      const photoInCollection: PhotoInCollection = this.getPhoto(width >= height);
+      console.log('photo: ', photoInCollection);
+      console.log(this.props.photoCollection);
+      const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+    }
+  }
+
+  // for each photo, need
+  //    filePath
+  //    width
+  //    height
   renderPhotoCollage() {
     if (isNil(this.props.photoCollageSpec) ||
       isNil(this.props.photoCollection) ||
@@ -73,15 +115,7 @@ class PhotoCollageComponent extends React.Component<
       console.log('no photoCollageSpec or no photosInCollection');
       return null;
     } else {
-      const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec;
-      for (const photosInCollageSpec of photosInCollageSpecs) {
-        const { x, y, width, height } = photosInCollageSpec;
-
-        console.log('number of photos in collection: ', this.props.photoCollection.photosInCollection.length);
-
-        // get a random photo with the same orientation as the spec
-        console.log('get random photo: ', x, y, width, height);
-      }
+      this.getPhotosInCollage();
       return null;
     }
   }
@@ -91,6 +125,8 @@ class PhotoCollageComponent extends React.Component<
     console.log('render');
     console.log(this.canvasRef);
     
+    const poo = this.renderPhotoCollage();
+
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
 
       const context = this.ctx;
@@ -134,8 +170,9 @@ class PhotoCollageComponent extends React.Component<
 
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageProps> {
   return {
-    photoCollageSpec: getActivePhotoCollageSpec(state),
+    photosRootDirectory: getPhotosRootDirectory(state),
     photoCollection: getPhotoCollection(state),
+    photoCollageSpec: getActivePhotoCollageSpec(state),
   };
 }
 
