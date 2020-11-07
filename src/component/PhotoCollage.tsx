@@ -83,27 +83,31 @@ class PhotoCollageComponent extends React.Component<
     while (true) {
       const randomInt = this.getRandomInt(numPhotos);
       const photoInCollection: PhotoInCollection = photosInCollection[randomInt];
-      const landscapeOrientation: boolean = photoInCollection.width! >= photoInCollection.height;
-      if (landscape === landscapeOrientation) {
-        return photoInCollection;
+      if (!isNil(photoInCollection.height)) {
+        const landscapeOrientation: boolean = photoInCollection.width! >= photoInCollection.height;
+        if (landscape === landscapeOrientation) {
+          return photoInCollection;
+        }
       }
     }
   }
 
-  renderPhoto(filePath: string, x: number, y: number) {
+  renderPhoto(filePath: string, x: number, y: number, width: number, height: number) {
     const photo = new Image();
     photo.onload = () => {
-      this.ctx.drawImage(photo, x, y);
+      this.ctx.drawImage(photo, x, y, width, height);
     };
     photo.src = filePath;
   }
 
-  getScaledCoordinates(x: number, y: number, collageWidth: number, collageHeight: number, screenWidth: number, screenHeight: number): any {
+  getScaledCoordinates(x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, screenWidth: number, screenHeight: number): any {
     const screenX = (x / collageWidth) * screenWidth;
     const screenY = (y / collageHeight) * screenHeight;
     return {
       x: screenX,
       y: screenY,
+      width: (width / collageWidth) * screenWidth,
+      height: (height / collageHeight) * screenHeight,
     };
   }
 
@@ -117,8 +121,13 @@ class PhotoCollageComponent extends React.Component<
       console.log('photo: ', photoInCollection);
       console.log(this.props.photoCollection);
       const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
-      const screenCoordinates = this.getScaledCoordinates(x, y, collageWidth, collageHeight, 1920, 1080);
-      this.renderPhoto('file:///' + filePath, screenCoordinates.x, screenCoordinates.y);
+      const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, 1920, 1080);
+      this.renderPhoto(
+        'file:///' + filePath,
+        screenCoordinates.x,
+        screenCoordinates.y,
+        screenCoordinates.width,
+        screenCoordinates.height);
     }
   }
 
