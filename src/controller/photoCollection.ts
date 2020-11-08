@@ -6,6 +6,7 @@ import { getPhotoCollection, getPhotosRootDirectory } from '../selector';
 import { PhotoCollageState, PhotoCollection, PhotoInCollection } from '../type';
 import { setPhotoCollection } from '../model';
 import { getFilePathFromPhotoInCollection } from '../utilities';
+import { isNil, isNumber } from 'lodash';
 
 export function readPhotoCollection() {
   console.log('readPhotoCollection invoked');
@@ -55,14 +56,27 @@ export function updateImageSizes() {
       const filePath = getFilePathFromPhotoInCollection(photosRootDirectory, photoInCollection);
       if (fs.pathExistsSync(filePath)) {
         const dimensions = sizeOf(filePath);
+        if (isNil(dimensions.width) || isNil(dimensions.height)) {
+          console.log('isNil: ' + filePath);
+        }
+        if (!isNumber(dimensions.height)) {
+          console.log('!isNumber: ' + filePath);
+        }
         photoInCollection.width = dimensions.width;
         photoInCollection.height = dimensions.height;
       }
+      else {
+        if (!isNumber(photoInCollection.height) || !isNumber(photoInCollection.width)) {
+          console.log(filePath);
+        }
+      }
     });
+
+    console.log('updateImageSizes: all photos updated');
 
     dispatch(setPhotoCollection(photoCollection));
 
-    fsSaveObjectAsLocalJsonFile(photoCollection, '/Users/tedshaffer/Documents/ShafferotoBackup/mediaItems/updatedPhotoCollectionManifest.json');
+    fsSaveObjectAsLocalJsonFile(photoCollection, '/Users/tedshaffer/Documents/ShafferotoBackup/mediaItems/updatedPhotoCollectionManifest2.json');
 
     console.log('updateImageSizes complete');
   });
