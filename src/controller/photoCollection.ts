@@ -20,7 +20,8 @@ export function readPhotoCollection() {
     const photosRootDirectory = getPhotosRootDirectory(state);
 
     // const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, 'photoCollectionManifest.json');
-    const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, 'updatedPhotoCollectionManifest.json');
+    // const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, 'updatedPhotoCollectionManifest.json');
+    const photoCollectionManifestPath: string = isomorphicPath.join('/storage/sd/mediaItems', 'updatedPhotoCollectionManifest.json');
     const data = fs.readFileSync(photoCollectionManifestPath);
     const photoCollection: PhotoCollection = JSON.parse(data.toString()) as PhotoCollection;
     photoCollection.photosInCollection = [];

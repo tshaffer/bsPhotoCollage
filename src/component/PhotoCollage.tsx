@@ -14,10 +14,10 @@ import {
 } from '../type';
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
-import { getFilePathFromPhotoInCollection } from '../utilities';
+import { getFilePathFromPhotoInCollection, getOtherFilePathFromPhotoInCollection } from '../utilities';
 
 export interface PhotoCollageComponentState {
-  note: string;
+  imageCount: number;
 }
 
 // -----------------------------------------------------------------------
@@ -50,7 +50,7 @@ class PhotoCollageComponent extends React.Component<
     super(props);
 
     this.state = {
-      note: 'noNote',
+      imageCount: 0,
     };
 
     this.photoImages = [];
@@ -61,6 +61,16 @@ class PhotoCollageComponent extends React.Component<
     };
   }
 
+  timeoutHandler(photoCollageComponent: any) {
+    console.log('timeoutHandler invoked');
+    console.log(photoCollageComponent.photoCollageComponent);
+    console.log(Object.keys(photoCollageComponent.photoCollageComponent));
+    photoCollageComponent.photoCollageComponent.setState({
+      imageCount: photoCollageComponent.photoCollageComponent.state.imageCount + 1,
+    });
+
+  }
+
   componentDidMount() {
     console.log('componentDidMount');
     console.log(this.canvasRef);
@@ -68,8 +78,14 @@ class PhotoCollageComponent extends React.Component<
     console.log(this.ctx);
 
     this.setState({
-      note: 'mounted',
+      imageCount: 1,
     });
+
+    const timeoutEventCallbackParams: any = {
+      photoCollageComponent: this,
+    };
+
+    setInterval(this.timeoutHandler, 10000, timeoutEventCallbackParams);
   }
 
   getRandomInt(max: number): number {
@@ -131,7 +147,13 @@ class PhotoCollageComponent extends React.Component<
       const photoInCollection: PhotoInCollection = this.getPhoto(width >= height);
       console.log('photo: ', photoInCollection);
       console.log(this.props.photoCollection);
-      const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      const filePath: string = getOtherFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+
+      // const filePath = 'mediaItems/E/g/AEEKk93xVAja6f834K9AcVxVQ-1kkcyKU5P5U1k_egj-6JlB3LDtQYiEGcki3kySF0DRWmhLKGiTZX_dUS9s0W9k8kJLFMLlEg.jpg';
+      console.log('photo filePath:');
+      console.log(filePath);
+
+      
       const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, 1920, 1080);
       this.renderPhoto(
         'file:///' + filePath,
@@ -157,7 +179,7 @@ class PhotoCollageComponent extends React.Component<
 
     console.log('render');
     console.log(this.canvasRef);
-
+    console.log(this.state.imageCount);
 
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
       const context = this.ctx;
@@ -176,7 +198,6 @@ class PhotoCollageComponent extends React.Component<
           ref={this.setCanvasRef}
         />
         pizza
-        {this.state.note}
       </div>
     );
   }

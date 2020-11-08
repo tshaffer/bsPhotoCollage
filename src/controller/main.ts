@@ -3,7 +3,7 @@ import { PhotoCollageAttributes, PhotoCollageSpec, PhotoCollageState, PhotoInCol
 
 import { addPhotosCollageSpecs, setPhotoCollageSpecIndex, setPhotosRootDirectory } from '../model';
 import {
-  readPhotoCollection, 
+  readPhotoCollection,
   // updateImageSizes,
 } from './photoCollection';
 
@@ -12,7 +12,9 @@ export function init() {
   return ((dispatch: any, getState: any) => {
     console.log('init dispatched');
 
-    dispatch(setPhotosRootDirectory('/Volumes/SHAFFEROTO/mediaItems'));
+    // dispatch(setPhotosRootDirectory('/Volumes/SHAFFEROTO/mediaItems'));
+    // dispatch(setPhotosRootDirectory('/Users/tedshaffer/Documents/ShafferotoBackup/mediaItems'));
+    dispatch(setPhotosRootDirectory('mediaItems'));
 
     dispatch(readPhotoCollection());
 
