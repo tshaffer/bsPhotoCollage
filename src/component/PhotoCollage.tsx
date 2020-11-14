@@ -17,8 +17,8 @@ import {
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
 import {
-  getFilePathFromPhotoInCollection,
-  // getOtherFilePathFromPhotoInCollection
+  getFilePathFromPhotoInCollection, 
+  getOtherFilePathFromPhotoInCollection,
 } from '../utilities';
 
 export interface PhotoCollageComponentState {
@@ -153,10 +153,9 @@ class PhotoCollageComponent extends React.Component<
       console.log('photo: ', photoInCollection);
       console.log(this.props.photoCollection);
       // TEDTODO
-      // const filePath: string = getOtherFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
-      const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      const filePath: string = getOtherFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      // const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
 
-      // const filePath = 'mediaItems/E/g/AEEKk93xVAja6f834K9AcVxVQ-1kkcyKU5P5U1k_egj-6JlB3LDtQYiEGcki3kySF0DRWmhLKGiTZX_dUS9s0W9k8kJLFMLlEg.jpg';
       console.log('photo filePath:');
       console.log(filePath);
 

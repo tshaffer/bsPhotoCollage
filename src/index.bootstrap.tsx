@@ -13,9 +13,9 @@ import { PhotoCollageState } from './type/base';
 import { photoCollageAttributesReducer, photoCollageReducer, photoCollageSpecsReducer, photoCollectionReducer } from './model';
 import { init } from './controller';
 import { PhotoCollage } from './component';
+import { readConfig } from './config';
 
 const getStore = () => {
-  console.log('***************************** getStore() invoked');
   const reducers = combineReducers<PhotoCollageState>({
     photoCollageAttributes: photoCollageAttributesReducer,
     photoCollageSpecs: photoCollageSpecsReducer,
@@ -35,6 +35,8 @@ const getStore = () => {
 function bootstrapper() {
 
   console.log('index.bootstrap.tsx');
+
+  readConfig('/storage/sd/config.env');
 
   // initLogging();
 

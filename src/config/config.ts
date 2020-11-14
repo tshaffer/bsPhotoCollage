@@ -27,7 +27,7 @@ export let photoCollageConfig: PhotoCollageConfig;
 // declare module '*';
 // The benefit (and downside) of this is that you can import absolutely anything and TS will compile.
 
-export const readConfig = () => {
+export const readConfig = (pathToConfigFile: string) => {
   const dotenv = require('dotenv');
   // TEDTODO
   // dotenv.config( { path: '../src/config/config.env' });
@@ -36,7 +36,7 @@ export const readConfig = () => {
   // const config = dotenv.config( { path: '/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env' }).parsed;
   // console.log('config: ', config);
 
-  const rawConfig = dotenv.config({ path: '/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env' }).parsed;
+  const rawConfig = dotenv.config({ path: pathToConfigFile }).parsed;
 
   photoCollageConfig = {
     volumeSpec: rawConfig.volumeSpec,
