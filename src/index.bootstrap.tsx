@@ -38,6 +38,8 @@ function bootstrapper() {
 
   readConfig('/storage/sd/config.env');
 
+  console.log(`Current directory: ${process.cwd()}`);
+
   // initLogging();
 
   const store = getStore();

@@ -10,7 +10,7 @@ export function getFilePathFromPhotoInCollection(photosRootDirectory: string, ph
 }
 
 // TEDTODO
-export function getOtherFilePathFromPhotoInCollection(photosRootDirectory: string, photoInCollection: PhotoInCollection): string {
+export function getRelativeFilePathFromPhotoInCollection(photosRootDirectory: string, photoInCollection: PhotoInCollection): string {
   const dirPath = isomorphicPath.join(photosRootDirectory, getRelativePathFromHash(photoInCollection.id));
   // const dirPath = isomorphicPath.join('mediaItems', getRelativePathFromHash(photoInCollection.id));
   const filePath = isomorphicPath.join(dirPath, photoInCollection.id + '.jpg');
