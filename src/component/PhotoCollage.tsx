@@ -5,6 +5,8 @@ import * as fs from 'fs-extra';
 
 import { isNil } from 'lodash';
 
+import { photoCollageConfig } from '../config';
+
 import {
   PhotoCollageState,
   PhotoCollageSpec,
@@ -147,14 +149,16 @@ class PhotoCollageComponent extends React.Component<
       const photoInCollection: PhotoInCollection = this.getPhoto(width >= height);
       console.log('photo: ', photoInCollection);
       console.log(this.props.photoCollection);
-      const filePath: string = getOtherFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      // TEDTODO
+      // const filePath: string = getOtherFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
+      const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
 
       // const filePath = 'mediaItems/E/g/AEEKk93xVAja6f834K9AcVxVQ-1kkcyKU5P5U1k_egj-6JlB3LDtQYiEGcki3kySF0DRWmhLKGiTZX_dUS9s0W9k8kJLFMLlEg.jpg';
       console.log('photo filePath:');
       console.log(filePath);
 
       
-      const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, 1920, 1080);
+      const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
       this.renderPhoto(
         'file:///' + filePath,
         screenCoordinates.x,
@@ -193,8 +197,8 @@ class PhotoCollageComponent extends React.Component<
       <div>
         <canvas
           id='flibbet'
-          width='1920'
-          height='1080'
+          width={photoCollageConfig.width.toString()}
+          height={photoCollageConfig.height.toString()}
           ref={this.setCanvasRef}
         />
         pizza

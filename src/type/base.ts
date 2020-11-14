@@ -1,3 +1,10 @@
+export interface PhotoCollageConfig {
+  photosRootDirectory: string;
+  photosManifestFileName: string;
+  width: number;
+  height: number;
+}
+
 export interface PhotoCollageState {
   photoCollageAttributes: PhotoCollageAttributes;
   photoCollageSpecs: PhotoCollageSpec[];

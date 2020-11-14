@@ -34,7 +34,7 @@ const getStore = () => {
 
 function bootstrapper() {
 
-  console.log('bootstrapper');
+  console.log('index.bootstrap.tsx');
 
   // initLogging();
 

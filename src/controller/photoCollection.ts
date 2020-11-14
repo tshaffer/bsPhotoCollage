@@ -8,6 +8,8 @@ import { setPhotoCollection } from '../model';
 import { getFilePathFromPhotoInCollection } from '../utilities';
 import { isNil, isNumber } from 'lodash';
 
+import { photoCollageConfig } from '../config';
+
 export function readPhotoCollection() {
   console.log('readPhotoCollection invoked');
 
@@ -21,7 +23,8 @@ export function readPhotoCollection() {
 
     // const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, 'photoCollectionManifest.json');
     // const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, 'updatedPhotoCollectionManifest.json');
-    const photoCollectionManifestPath: string = isomorphicPath.join('/storage/sd/mediaItems', 'updatedPhotoCollectionManifest.json');
+    // const photoCollectionManifestPath: string = isomorphicPath.join('/storage/sd/mediaItems', 'updatedPhotoCollectionManifest.json');
+    const photoCollectionManifestPath: string = isomorphicPath.join(photosRootDirectory, photoCollageConfig.photosManifestFileName);
     const data = fs.readFileSync(photoCollectionManifestPath);
     const photoCollection: PhotoCollection = JSON.parse(data.toString()) as PhotoCollection;
     photoCollection.photosInCollection = [];

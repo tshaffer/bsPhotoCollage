@@ -1,24 +1,27 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
 import { Provider } from 'react-redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+
 import './bootstrap.css';
 import 'normalize.css/normalize.css';
 import 'flexboxgrid/dist/flexboxgrid.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import { rootReducer } from '../src/model';
+import { readConfig } from '../src/config/config';
 
-import { PhotoCollageState } from '../src/type';
-import { photoCollageReducer } from '../src/model';
 import { init } from '../src//controller';
 import {
   PhotoCollage,
 } from '../src/component';
+
+// this code is run when running on the desktop
+console.log('bootstrap.tsx');
+
+readConfig();
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
@@ -26,24 +29,6 @@ const store = createStore(
     applyMiddleware(thunkMiddleware)
   ));
 
-
-// const getStore = () => {
-//   console.log('***************************** getStore() invoked');
-//   const reducers = combineReducers<PhotoCollageState>({
-//     photoCollage: photoCollageReducer,
-//   });
-//   return createStore<PhotoCollageState>(
-//     reducers,
-//     composeWithDevTools(
-//       applyMiddleware(
-//         thunk,
-//       ),
-//     ));
-// };
-
-// const store = getStore();
-
-// store.dispatch(init(store));
 store.dispatch(init());
 
 ReactDOM.render(

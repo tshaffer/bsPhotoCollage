@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { PhotoCollageAttributes, PhotoCollageSpec, PhotoCollageState, PhotoInCollageSpec } from '../type';
+import { photoCollageConfig } from '../config';
 
 import { addPhotosCollageSpecs, setPhotoCollageSpecIndex, setPhotosRootDirectory } from '../model';
 import {
@@ -7,14 +8,19 @@ import {
   // updateImageSizes,
 } from './photoCollection';
 
+
 export function init() {
   console.log('init invoked');
   return ((dispatch: any, getState: any) => {
     console.log('init dispatched');
 
+    console.log('main.ts:');
+    console.log(photoCollageConfig);
+
     // dispatch(setPhotosRootDirectory('/Volumes/SHAFFEROTO/mediaItems'));
     // dispatch(setPhotosRootDirectory('/Users/tedshaffer/Documents/ShafferotoBackup/mediaItems'));
-    dispatch(setPhotosRootDirectory('mediaItems'));
+    // dispatch(setPhotosRootDirectory('mediaItems'));
+    dispatch(setPhotosRootDirectory(photoCollageConfig.photosRootDirectory));
 
     dispatch(readPhotoCollection());
 
