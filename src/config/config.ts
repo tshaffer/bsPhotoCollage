@@ -39,6 +39,7 @@ export const readConfig = () => {
   const rawConfig = dotenv.config({ path: '/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env' }).parsed;
 
   photoCollageConfig = {
+    volumeSpec: rawConfig.volumeSpec,
     photosRootDirectory: rawConfig.photosRootDirectory,
     photosManifestFileName: rawConfig.photosManifestFileName,
     width: parseInt(rawConfig.width, 10),

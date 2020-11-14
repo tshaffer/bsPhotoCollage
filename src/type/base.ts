@@ -1,4 +1,5 @@
 export interface PhotoCollageConfig {
+  volumeSpec: string;
   photosRootDirectory: string;
   photosManifestFileName: string;
   width: number;

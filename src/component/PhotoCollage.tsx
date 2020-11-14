@@ -16,7 +16,10 @@ import {
 } from '../type';
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
-import { getFilePathFromPhotoInCollection, getOtherFilePathFromPhotoInCollection } from '../utilities';
+import {
+  getFilePathFromPhotoInCollection,
+  // getOtherFilePathFromPhotoInCollection
+} from '../utilities';
 
 export interface PhotoCollageComponentState {
   imageCount: number;
@@ -157,7 +160,7 @@ class PhotoCollageComponent extends React.Component<
       console.log('photo filePath:');
       console.log(filePath);
 
-      
+
       const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
       this.renderPhoto(
         'file:///' + filePath,
