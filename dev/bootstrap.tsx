@@ -21,6 +21,9 @@ import {
 // this code is run when running on the desktop
 console.log('bootstrap.tsx');
 
+console.log(`Current directory: ${process.cwd()}`);
+// Current directory: /Users/tedshaffer/Documents/Projects/bsPhotoCollage
+
 readConfig('/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env');
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

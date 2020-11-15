@@ -36,9 +36,9 @@ function bootstrapper() {
 
   console.log('index.bootstrap.tsx');
 
-  readConfig('/storage/sd/config.env');
-
   console.log(`Current directory: ${process.cwd()}`);
+
+  readConfig('/storage/sd/config.env');
 
   // initLogging();
 

@@ -9,6 +9,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const paths = require('./paths');
 const env = require('./env');
 const getClientEnvironment = env.getClientEnvironment;
@@ -157,31 +158,37 @@ const plugins = [];
 // Otherwise React will be compiled in the very slow development mode.
 plugins.push(new webpack.DefinePlugin(envVar.stringified));
 
-// Minify the code.
-// DEFER THIS TO CONSUMING PACKAGE
-// TODO find solution that allows two staging minification
-// plugins.push(
-//   new webpack.optimize.UglifyJsPlugin({
-//     compress: {
-//       warnings: false,
-//       // Disabled because of an issue with Uglify breaking seemingly valid code:
-//       // https://github.com/facebookincubator/create-react-app/issues/2376
-//       // Pending further investigation:
-//       // https://github.com/mishoo/UglifyJS2/issues/2011
-//       comparisons: false,
-//     },
-//     output: {
-//       comments: false,
-//       // Turned on because emoji and regex is not minified properly using default
-//       // https://github.com/facebookincubator/create-react-app/issues/2488
-//       ascii_only: true,
-//     },
-//     sourceMap: shouldUseSourceMap,
-//   })
-// );
+const cwp = new CopyWebpackPlugin([
+  { from: './src/config/config.brightsign.photosLocal.env', to: '../standalone/config.env' },
+  { from: './BrightScript/autorun.brs', to: '../standalone' },
+]);
+plugins.push(cwp);
 
-// Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
-plugins.push(new ExtractTextPlugin({ filename: cssFilename }));
+  // Minify the code.
+  // DEFER THIS TO CONSUMING PACKAGE
+  // TODO find solution that allows two staging minification
+  // plugins.push(
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     compress: {
+  //       warnings: false,
+  //       // Disabled because of an issue with Uglify breaking seemingly valid code:
+  //       // https://github.com/facebookincubator/create-react-app/issues/2376
+  //       // Pending further investigation:
+  //       // https://github.com/mishoo/UglifyJS2/issues/2011
+  //       comparisons: false,
+  //     },
+  //     output: {
+  //       comments: false,
+  //       // Turned on because emoji and regex is not minified properly using default
+  //       // https://github.com/facebookincubator/create-react-app/issues/2488
+  //       ascii_only: true,
+  //     },
+  //     sourceMap: shouldUseSourceMap,
+  //   })
+  // );
+
+  // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
+  plugins.push(new ExtractTextPlugin({ filename: cssFilename }));
 
 // Generate a manifest file which contains a mapping of all asset filenames
 // to their corresponding output file so that tools can pick it up without
