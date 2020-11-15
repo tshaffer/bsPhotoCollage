@@ -9,10 +9,13 @@ import * as url from 'url';
 let mainWindow: Electron.BrowserWindow | null;
 
 function createWindow() {
+  console.log('createWindow');
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    // height: 600,
+    // width: 800,
+    height: 2160,
+    width: 3140,
     webPreferences: {
       nodeIntegration: true,
       webSecurity: false
