@@ -5,6 +5,8 @@ import thunkMiddleware from 'redux-thunk';
 
 import { Provider } from 'react-redux';
 
+import isomorphicPath from 'isomorphic-path';
+
 import './bootstrap.css';
 import 'normalize.css/normalize.css';
 import 'flexboxgrid/dist/flexboxgrid.min.css';
@@ -24,7 +26,9 @@ console.log('bootstrap.tsx');
 console.log(`Current directory: ${process.cwd()}`);
 // Current directory: /Users/tedshaffer/Documents/Projects/bsPhotoCollage
 
-readConfig('/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env');
+// '/Users/tedshaffer/Documents/Projects/bsPhotoCollage/src/config/config.env'
+const configFilePath: string = isomorphicPath.join(process.cwd(), 'src/config/config.env');
+readConfig(configFilePath);
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
