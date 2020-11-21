@@ -49,3 +49,11 @@ export interface PhotoInCollection {
   height: number;
   width: number | null;
 }
+
+export interface DisplayedPhoto {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  photoInCollection: PhotoInCollection;
+}

@@ -14,6 +14,7 @@ import {
   PhotoInCollageSpec,
   PhotoCollection,
   PhotoInCollection,
+  DisplayedPhoto,
 } from '../type';
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
@@ -25,6 +26,7 @@ import {
 export interface PhotoCollageComponentState {
   imageCount: number;
   showModal: boolean;
+  selectedPhoto: DisplayedPhoto | null;
 }
 
 // -----------------------------------------------------------------------
@@ -51,7 +53,7 @@ class PhotoCollageComponent extends React.Component<
   canvasRef: any;
   setCanvasRef: any;
   ctx: any;
-  photoImages: any[];
+  photoImages: DisplayedPhoto[];
 
   constructor(props: any) {
     super(props);
@@ -59,6 +61,7 @@ class PhotoCollageComponent extends React.Component<
     this.state = {
       imageCount: 0,
       showModal: false,
+      selectedPhoto: null,
     };
 
     this.photoImages = [];
@@ -152,29 +155,35 @@ class PhotoCollageComponent extends React.Component<
 
   handleClick(e: any) {
 
-    // const screenX = e.screenX;
-    // const screenY = e.screenY;
-
     const elem = this.canvasRef;
     const elemLeft = elem.offsetLeft + elem.clientLeft;
     const elemTop = elem.offsetTop + elem.clientTop;
-    // const context = this.ctx;
 
     const x = e.pageX - elemLeft;
     const y = e.pageY - elemTop;
 
     // Get selected photo
-    this.photoImages.forEach((photoImage: any, index: number) => {
+    const index = 0;
+    for (const photoImage of this.photoImages) {
       if (y > photoImage.y && y < photoImage.y + photoImage.height
         && x > photoImage.x && x < photoImage.x + photoImage.width) {
         console.log('clicked photo with index');
         console.log(index);
 
         Modal.setAppElement('#collageCanvas');
-        this.setState({ showModal: true });
-      }
-    });
+        this.setState({
+          showModal: true,
+          selectedPhoto: this.photoImages[index],
+        });
 
+        return;
+      }
+    }
+
+    this.setState({
+      showModal: false,
+      selectedPhoto: null,
+    });
   }
 
   handleOpenModal() {
@@ -209,6 +218,7 @@ class PhotoCollageComponent extends React.Component<
         y: screenCoordinates.y,
         width: screenCoordinates.width,
         height: screenCoordinates.height,
+        photoInCollection,
       });
 
       this.renderPhoto(
@@ -282,7 +292,11 @@ class PhotoCollageComponent extends React.Component<
             }
           }}
         >
-          <button onClick={this.handleCloseModal}>Close Modal</button>
+          <div>
+            Selected photo:
+            {this.state.selectedPhoto?.photoInCollection.fileName}
+            <button onClick={this.handleCloseModal}>Close Modal</button>
+          </div>
         </Modal>
         pizza
       </div>
