@@ -8,7 +8,8 @@ Sub RunApp()
   EnableZoneSupport(true)
 
   vm = CreateObject("roVideoMode")
-  vm.SetMode("3840x2160x60p:fullres")
+  vm.SetMode("3840x2160x30p:fullres")
+  ' vm.SetMode("3840x2160x60p:fullres")
   ' vm.SetMode("1920x1080x60p")
 
   app = {}
