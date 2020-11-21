@@ -78,16 +78,6 @@ class PhotoCollageComponent extends React.Component<
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  timeoutHandler(photoCollageComponent: any) {
-    console.log('timeoutHandler invoked');
-    console.log(photoCollageComponent.photoCollageComponent);
-    console.log(Object.keys(photoCollageComponent.photoCollageComponent));
-    photoCollageComponent.photoCollageComponent.setState({
-      imageCount: photoCollageComponent.photoCollageComponent.state.imageCount + 1,
-    });
-
-  }
-
   componentDidMount() {
     console.log('componentDidMount');
     console.log(this.canvasRef);
@@ -101,12 +91,23 @@ class PhotoCollageComponent extends React.Component<
     this.startTimer();
   }
 
+  shouldComponentUpdate(nextProps: PhotoCollageProps, nextState: PhotoCollageComponentState): boolean {
+    // if (this.state.imageCount !== nextState.imageCount) {
+    //   return true;
+    // }
+    // if (this.state.showModal !== nextState.showModal) {
+    //   return true;
+    // }
+    // return false;
+    return true;
+  }
+
   startTimer(): void {
     const timeoutEventCallbackParams: any = {
       photoCollageComponent: this,
     };
 
-    this.intervalId = setInterval(this.timeoutHandler, 10000, timeoutEventCallbackParams);
+    this.intervalId = setInterval(this.handleTimeout, 10000, timeoutEventCallbackParams);
   }
 
   getRandomInt(max: number): number {
@@ -157,6 +158,15 @@ class PhotoCollageComponent extends React.Component<
       width: (width / collageWidth) * screenWidth,
       height: (height / collageHeight) * screenHeight,
     };
+  }
+
+  handleTimeout(photoCollageComponent: any) {
+    console.log('timeoutHandler invoked');
+    console.log(photoCollageComponent.photoCollageComponent);
+    console.log(Object.keys(photoCollageComponent.photoCollageComponent));
+    photoCollageComponent.photoCollageComponent.setState({
+      imageCount: photoCollageComponent.photoCollageComponent.state.imageCount + 1,
+    });
   }
 
   handleClick(e: any) {
