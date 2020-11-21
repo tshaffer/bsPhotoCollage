@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import * as fs from 'fs-extra';
+import Modal from 'react-modal';
 
 import { isNil } from 'lodash';
 
@@ -23,6 +24,7 @@ import {
 
 export interface PhotoCollageComponentState {
   imageCount: number;
+  showModal: boolean;
 }
 
 // -----------------------------------------------------------------------
@@ -56,6 +58,7 @@ class PhotoCollageComponent extends React.Component<
 
     this.state = {
       imageCount: 0,
+      showModal: false,
     };
 
     this.photoImages = [];
@@ -66,6 +69,8 @@ class PhotoCollageComponent extends React.Component<
     };
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   timeoutHandler(photoCollageComponent: any) {
@@ -147,13 +152,13 @@ class PhotoCollageComponent extends React.Component<
 
   handleClick(e: any) {
 
-    const screenX = e.screenX;
-    const screenY = e.screenY;
+    // const screenX = e.screenX;
+    // const screenY = e.screenY;
 
     const elem = this.canvasRef;
     const elemLeft = elem.offsetLeft + elem.clientLeft;
     const elemTop = elem.offsetTop + elem.clientTop;
-    const context = this.ctx;
+    // const context = this.ctx;
 
     const x = e.pageX - elemLeft;
     const y = e.pageY - elemTop;
@@ -164,9 +169,20 @@ class PhotoCollageComponent extends React.Component<
         && x > photoImage.x && x < photoImage.x + photoImage.width) {
         console.log('clicked photo with index');
         console.log(index);
+
+        Modal.setAppElement('#collageCanvas');
+        this.setState({ showModal: true });
       }
     });
 
+  }
+
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
   }
 
   renderPhotosInCollage() {
@@ -238,6 +254,36 @@ class PhotoCollageComponent extends React.Component<
           ref={this.setCanvasRef}
           onClick={this.handleClick}
         />
+        <Modal
+          isOpen={this.state.showModal}
+          contentLabel='Minimal Modal Example'
+          style={{
+            overlay: {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 100,
+              bottom: 200,
+              backgroundColor: 'rgba(255, 255, 255, 0.75)'
+            },
+            content: {
+              position: 'absolute',
+              top: '40px',
+              left: '40px',
+              right: '40px',
+              bottom: '40px',
+              border: '1px solid #ccc',
+              background: '#fff',
+              overflow: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              borderRadius: '4px',
+              outline: 'none',
+              padding: '20px'
+            }
+          }}
+        >
+          <button onClick={this.handleCloseModal}>Close Modal</button>
+        </Modal>
         pizza
       </div>
     );
