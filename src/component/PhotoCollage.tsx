@@ -17,7 +17,7 @@ import {
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
 import {
-  getFilePathFromPhotoInCollection, 
+  getFilePathFromPhotoInCollection,
   getRelativeFilePathFromPhotoInCollection,
 } from '../utilities';
 
@@ -64,6 +64,8 @@ class PhotoCollageComponent extends React.Component<
       this.canvasRef = element;
       this.ctx = element.getContext('2d');
     };
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   timeoutHandler(photoCollageComponent: any) {
@@ -143,6 +145,30 @@ class PhotoCollageComponent extends React.Component<
     };
   }
 
+  handleClick(e: any) {
+
+    const screenX = e.screenX;
+    const screenY = e.screenY;
+
+    const elem = this.canvasRef;
+    const elemLeft = elem.offsetLeft + elem.clientLeft;
+    const elemTop = elem.offsetTop + elem.clientTop;
+    const context = this.ctx;
+
+    const x = e.pageX - elemLeft;
+    const y = e.pageY - elemTop;
+
+    // Get selected photo
+    this.photoImages.forEach((photoImage: any, index: number) => {
+      if (y > photoImage.y && y < photoImage.y + photoImage.height
+        && x > photoImage.x && x < photoImage.x + photoImage.width) {
+        console.log('clicked photo with index');
+        console.log(index);
+      }
+    });
+
+  }
+
   renderPhotosInCollage() {
     this.photoImages = [];
     const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
@@ -161,6 +187,14 @@ class PhotoCollageComponent extends React.Component<
 
 
       const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
+
+      this.photoImages.push({
+        x: screenCoordinates.x,
+        y: screenCoordinates.y,
+        width: screenCoordinates.width,
+        height: screenCoordinates.height,
+      });
+
       this.renderPhoto(
         'file:///' + filePath,
         screenCoordinates.x,
@@ -198,10 +232,11 @@ class PhotoCollageComponent extends React.Component<
     return (
       <div>
         <canvas
-          id='flibbet'
+          id='collageCanvas'
           width={photoCollageConfig.width.toString()}
           height={photoCollageConfig.height.toString()}
           ref={this.setCanvasRef}
+          onClick={this.handleClick}
         />
         pizza
       </div>
