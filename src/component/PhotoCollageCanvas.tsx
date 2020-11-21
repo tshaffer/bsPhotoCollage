@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 import * as fs from 'fs-extra';
-import Modal from 'react-modal';
 
 import { isNil } from 'lodash';
 
@@ -15,8 +14,6 @@ import {
   PhotoInCollection,
   DisplayedPhoto,
 } from '../type';
-import { PhotoCollageCanvas } from './PhotoCollageCanvas';
-
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
 import {
@@ -24,9 +21,8 @@ import {
   getRelativeFilePathFromPhotoInCollection,
 } from '../utilities';
 
-export interface PhotoCollageComponentState {
+export interface PhotoCollageCanvasComponentState {
   imageCount: number;
-  showModal: boolean;
   selectedPhoto: DisplayedPhoto | null;
 }
 
@@ -36,7 +32,7 @@ export interface PhotoCollageComponentState {
 
 /** @internal */
 /** @private */
-export interface PhotoCollageProps {
+export interface PhotoCollageCanvasProps {
   photosRootDirectory: string;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
@@ -46,9 +42,9 @@ export interface PhotoCollageProps {
 // Component
 // -----------------------------------------------------------------------
 
-class PhotoCollageComponent extends React.Component<
-  PhotoCollageProps,
-  PhotoCollageComponentState
+class PhotoCollageCanvasComponent extends React.Component<
+  PhotoCollageCanvasProps,
+  PhotoCollageCanvasComponentState
   > {
 
   canvasRef: any;
@@ -62,7 +58,6 @@ class PhotoCollageComponent extends React.Component<
 
     this.state = {
       imageCount: 0,
-      showModal: false,
       selectedPhoto: null,
     };
 
@@ -75,19 +70,23 @@ class PhotoCollageComponent extends React.Component<
     };
 
     this.handleClick = this.handleClick.bind(this);
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount() {
     console.log('componentDidMount');
+    console.log(this.canvasRef);
+    console.log(this.canvasRef.current);
+    console.log(this.ctx);
+
+    this.setState({
+      imageCount: 1,
+    });
+
+    this.startTimer();
   }
 
-  shouldComponentUpdate(nextProps: PhotoCollageProps, nextState: PhotoCollageComponentState): boolean {
+  shouldComponentUpdate(nextProps: PhotoCollageCanvasProps, nextState: PhotoCollageCanvasComponentState): boolean {
     // if (this.state.imageCount !== nextState.imageCount) {
-    //   return true;
-    // }
-    // if (this.state.showModal !== nextState.showModal) {
     //   return true;
     // }
     // return false;
@@ -180,29 +179,13 @@ class PhotoCollageComponent extends React.Component<
 
         clearInterval(this.intervalId);
 
-        Modal.setAppElement('#collageCanvas');
-        this.setState({
-          showModal: true,
-          selectedPhoto: this.photoImages[index],
-        });
-
         return;
       }
     }
 
     this.setState({
-      showModal: false,
       selectedPhoto: null,
     });
-  }
-
-  handleOpenModal() {
-    this.setState({ showModal: true });
-  }
-
-  handleCloseModal() {
-    this.setState({ showModal: false });
-    this.startTimer();
   }
 
   renderPhotosInCollage() {
@@ -252,28 +235,6 @@ class PhotoCollageComponent extends React.Component<
     this.renderPhotosInCollage();
   }
 
-  renderDialog(): any {
-    if (isNil(this.state.selectedPhoto)) {
-      return (
-        <div>
-          <button onClick={this.handleCloseModal}>Close Modal</button>
-        </div>
-      );
-    }
-    const selectedPhoto: DisplayedPhoto = this.state.selectedPhoto;
-    return (
-      <div>
-        <p>Selected photo:</p>
-        <p>{selectedPhoto.photoInCollection.fileName}</p>
-        <p>Width</p>
-        <p>{selectedPhoto.photoInCollection.width}</p>
-        <p>Height</p>
-        <p>{selectedPhoto.photoInCollection.height}</p>
-        <button onClick={this.handleCloseModal}>Close Modal</button>
-      </div>
-    );
-  }
-
   render() {
 
     console.log('render');
@@ -290,37 +251,13 @@ class PhotoCollageComponent extends React.Component<
 
     return (
       <div>
-        <PhotoCollageCanvas/>
-        <Modal
-          isOpen={this.state.showModal}
-          contentLabel='Minimal Modal Example'
-          style={{
-            overlay: {
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 100,
-              bottom: 200,
-              backgroundColor: 'rgba(255, 255, 255, 0.75)'
-            },
-            content: {
-              position: 'absolute',
-              top: '40px',
-              left: '40px',
-              right: '40px',
-              bottom: '40px',
-              border: '1px solid #ccc',
-              background: '#fff',
-              overflow: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              borderRadius: '4px',
-              outline: 'none',
-              padding: '20px'
-            }
-          }}
-        >
-          {this.renderDialog()}
-        </Modal>
+        <canvas
+          id='collageCanvas'
+          width={photoCollageConfig.width.toString()}
+          height={photoCollageConfig.height.toString()}
+          ref={this.setCanvasRef}
+          onClick={this.handleClick}
+        />
         pizza
       </div>
     );
@@ -331,7 +268,7 @@ class PhotoCollageComponent extends React.Component<
 // Container
 // -----------------------------------------------------------------------
 
-function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageProps> {
+function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   return {
     photosRootDirectory: getPhotosRootDirectory(state),
     photoCollection: getPhotoCollection(state),
@@ -344,4 +281,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   }, dispatch);
 };
 
-export const PhotoCollage = connect(mapStateToProps, mapDispatchToProps)(PhotoCollageComponent);
+export const PhotoCollageCanvas = connect(mapStateToProps, mapDispatchToProps)(PhotoCollageCanvasComponent);
