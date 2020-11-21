@@ -189,7 +189,8 @@ class PhotoCollageCanvasComponent extends React.Component<
         console.log(index);
 
         clearInterval(this.intervalId);
-
+        this.intervalId = -1;
+        
         this.props.onSelectPhoto(photoImage);
 
         return;

@@ -93,23 +93,6 @@ class PhotoCollageComponent extends React.Component<
     return true;
   }
 
-  startTimer(): void {
-    const timeoutEventCallbackParams: any = {
-      photoCollageComponent: this,
-    };
-
-    this.intervalId = setInterval(this.handleTimeout, 10000, timeoutEventCallbackParams);
-  }
-
-  handleTimeout(photoCollageComponent: any) {
-    console.log('timeoutHandler invoked');
-    console.log(photoCollageComponent.photoCollageComponent);
-    console.log(Object.keys(photoCollageComponent.photoCollageComponent));
-    photoCollageComponent.photoCollageComponent.setState({
-      imageCount: photoCollageComponent.photoCollageComponent.state.imageCount + 1,
-    });
-  }
-
   handleOpenModal() {
     this.setState({ showModal: true });
   }
