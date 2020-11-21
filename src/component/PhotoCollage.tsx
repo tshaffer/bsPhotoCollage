@@ -74,7 +74,6 @@ class PhotoCollageComponent extends React.Component<
       this.ctx = element.getContext('2d');
     };
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
@@ -111,41 +110,6 @@ class PhotoCollageComponent extends React.Component<
     });
   }
 
-  handleClick(e: any) {
-
-    const elem = this.canvasRef;
-    const elemLeft = elem.offsetLeft + elem.clientLeft;
-    const elemTop = elem.offsetTop + elem.clientTop;
-
-    const x = e.pageX - elemLeft;
-    const y = e.pageY - elemTop;
-
-    // Get selected photo
-    const index = 0;
-    for (const photoImage of this.photoImages) {
-      if (y > photoImage.y && y < photoImage.y + photoImage.height
-        && x > photoImage.x && x < photoImage.x + photoImage.width) {
-        console.log('clicked photo with index');
-        console.log(index);
-
-        clearInterval(this.intervalId);
-
-        Modal.setAppElement('#collageCanvas');
-        this.setState({
-          showModal: true,
-          selectedPhoto: this.photoImages[index],
-        });
-
-        return;
-      }
-    }
-
-    this.setState({
-      showModal: false,
-      selectedPhoto: null,
-    });
-  }
-
   handleOpenModal() {
     this.setState({ showModal: true });
   }
@@ -177,6 +141,11 @@ class PhotoCollageComponent extends React.Component<
     );
   }
 
+  handleSelectPhoto(selectedPhoto: any) {
+    console.log('handleSelectPhoto');
+    console.log(selectedPhoto);
+  }
+
   render() {
 
     console.log('render');
@@ -185,7 +154,9 @@ class PhotoCollageComponent extends React.Component<
 
     return (
       <div>
-        <PhotoCollageCanvas/>
+        <PhotoCollageCanvas
+          onSelectPhoto={this.handleSelectPhoto}
+        />
         <Modal
           isOpen={this.state.showModal}
           contentLabel='Minimal Modal Example'

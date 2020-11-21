@@ -21,18 +21,26 @@ import {
   getRelativeFilePathFromPhotoInCollection,
 } from '../utilities';
 
-export interface PhotoCollageCanvasComponentState {
-  imageCount: number;
-  selectedPhoto: DisplayedPhoto | null;
-}
-
 // -----------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasProps {
+export interface PhotoCollageCanvasPropsFromParent {
+  onSelectPhoto: any;
+}
+
+/** @internal */
+/** @private */
+export interface PhotoCollageCanvasComponentState {
+  imageCount: number;
+  selectedPhoto: DisplayedPhoto | null;
+}
+
+/** @internal */
+/** @private */
+export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
   photosRootDirectory: string;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
@@ -55,6 +63,9 @@ class PhotoCollageCanvasComponent extends React.Component<
 
   constructor(props: any) {
     super(props);
+
+    console.log('constructor');
+    console.log(props);
 
     this.state = {
       imageCount: 0,
@@ -170,7 +181,7 @@ class PhotoCollageCanvasComponent extends React.Component<
     const y = e.pageY - elemTop;
 
     // Get selected photo
-    const index = 0;
+    let index = 0;
     for (const photoImage of this.photoImages) {
       if (y > photoImage.y && y < photoImage.y + photoImage.height
         && x > photoImage.x && x < photoImage.x + photoImage.width) {
@@ -179,8 +190,11 @@ class PhotoCollageCanvasComponent extends React.Component<
 
         clearInterval(this.intervalId);
 
+        this.props.onSelectPhoto(photoImage);
+
         return;
       }
+      index++;
     }
 
     this.setState({
@@ -268,11 +282,12 @@ class PhotoCollageCanvasComponent extends React.Component<
 // Container
 // -----------------------------------------------------------------------
 
-function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
+function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasPropsFromParent): Partial<PhotoCollageCanvasProps> {
   return {
     photosRootDirectory: getPhotosRootDirectory(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
+    onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
 
