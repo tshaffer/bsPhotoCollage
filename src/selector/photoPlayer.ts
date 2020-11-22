@@ -1,5 +1,5 @@
 import {
-  PhotoCollageState,
+  PhotoCollageState, PhotoInCollageSpec,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -12,4 +12,8 @@ export const getTimeBetweenUpdates = (state: PhotoCollageState): number => {
 
 export const getPhotoCollageFilesSpec = (state: PhotoCollageState): string => {
   return state.photoPlayer.photoCollageSpec;
+};
+
+export const getPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+  return state.photoPlayer.photosInCollage;
 };

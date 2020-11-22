@@ -30,6 +30,8 @@ export interface PhotoInCollageSpec {
   y: number;
   width: number;
   height: number;
+  fileName?: string;
+  filePath?: string;
 }
 
 export interface PhotoCollageItem {
@@ -55,6 +57,7 @@ export interface PhotoPlayer {
   playbackActive: boolean;
   timeBetweenUpdates: number;
   photoCollageSpec: string;
+  photosInCollage: PhotoInCollageSpec[];
 }
 
 export interface DisplayedPhoto {
@@ -62,5 +65,5 @@ export interface DisplayedPhoto {
   y: number;
   width: number;
   height: number;
-  // photoInCollection: PhotoInCollection;
+  photoSpec: PhotoInCollageSpec;
 }

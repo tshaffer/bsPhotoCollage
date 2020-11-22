@@ -12,10 +12,14 @@ import {
   PhotoCollection,
   PhotoInCollection,
   DisplayedPhoto,
+  PhotoInCollageSpec,
 } from '../type';
-import { startPlayback } from '../controller';
+import { 
+  startPlayback,
+  stopPlayback,
+ } from '../controller';
 
-import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec } from '../selector';
+import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec, getPhotosInCollage } from '../selector';
 import { getPhotoCollection } from '../selector';
 
 // -----------------------------------------------------------------------
@@ -41,7 +45,9 @@ export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromPare
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
   photoCollageFilesSpec: string;
+  photosInCollage: PhotoInCollageSpec[];
   onStartPlayback: () => any;
+  onStopPlayback: () => any;
 }
 
 // -----------------------------------------------------------------------
@@ -57,7 +63,6 @@ class PhotoCollageCanvasComponent extends React.Component<
   setCanvasRef: any;
   ctx: any;
   photoImages: DisplayedPhoto[];
-  intervalId: any;
 
   constructor(props: any) {
     super(props);
@@ -71,7 +76,6 @@ class PhotoCollageCanvasComponent extends React.Component<
     };
 
     this.photoImages = [];
-    this.intervalId = -1;
 
     this.setCanvasRef = (element: any) => {
       this.canvasRef = element;
@@ -145,9 +149,7 @@ class PhotoCollageCanvasComponent extends React.Component<
         console.log('clicked photo with index');
         console.log(index);
 
-        clearInterval(this.intervalId);
-        this.intervalId = -1;
-
+        this.props.onStopPlayback();
         this.props.onSelectPhoto(photoImage);
 
         return;
@@ -162,8 +164,11 @@ class PhotoCollageCanvasComponent extends React.Component<
 
   renderPhotosInCollage() {
 
-    const photoCollageFilesSpec: string = this.props.photoCollageFilesSpec;
-    const photoCollageFilesSpecs: string[] = photoCollageFilesSpec.split('|');
+    const photosInCollage: PhotoInCollageSpec[] = this.props.photosInCollage;
+
+
+    // const photoCollageFilesSpec: string = this.props.photoCollageFilesSpec;
+    // const photoCollageFilesSpecs: string[] = photoCollageFilesSpec.split('|');
 
     this.photoImages = [];
     const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
@@ -171,7 +176,7 @@ class PhotoCollageCanvasComponent extends React.Component<
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
 
-      const filePath = photoCollageFilesSpecs[index++];
+      const filePath = photosInCollage[index].filePath!;
 
       const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
 
@@ -180,7 +185,7 @@ class PhotoCollageCanvasComponent extends React.Component<
         y: screenCoordinates.y,
         width: screenCoordinates.width,
         height: screenCoordinates.height,
-        // photoInCollection,
+        photoSpec: photosInCollage[index],
       });
 
       this.renderPhoto(
@@ -189,6 +194,8 @@ class PhotoCollageCanvasComponent extends React.Component<
         screenCoordinates.y,
         screenCoordinates.width,
         screenCoordinates.height);
+
+      index++;
     }
   }
 
@@ -245,6 +252,7 @@ function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasP
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
     photoCollageFilesSpec: getPhotoCollageFilesSpec(state),
+    photosInCollage: getPhotosInCollage(state),
     onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
@@ -252,6 +260,7 @@ function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasP
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return bindActionCreators({
     onStartPlayback: startPlayback,
+    onStopPlayback: stopPlayback,
   }, dispatch);
 };
 

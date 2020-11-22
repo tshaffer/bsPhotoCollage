@@ -1,13 +1,19 @@
-import { isNil } from 'lodash';
+import {
+  cloneDeep,
+  isNil,
+} from 'lodash';
+
 import * as fs from 'fs-extra';
 
 import {
   PhotoCollageSpec,
   PhotoCollageState,
+  PhotoInCollageSpec,
   PhotoInCollection
 } from '../type';
 import {
-  setPhotoCollageSpec,
+  setActivePopulatedPhotoCollage,
+  setPhotoCollageSpec as setPhotoCollageUniqueId,
   startPhotoPlayback,
   stopPhotoPlayback,
 } from '../model';
@@ -48,9 +54,9 @@ const getCollagePhoto = (state: PhotoCollageState, landscape: boolean): PhotoInC
   }
 };
 
-const getCollagePhotos = (state: PhotoCollageState): any[] => {
+const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
 
-  const photosInCollage: any[] = [];
+  const photosInCollage: PhotoInCollageSpec[] = [];
 
   const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
@@ -59,7 +65,11 @@ const getCollagePhotos = (state: PhotoCollageState): any[] => {
       const { x, y, width, height } = photosInCollageSpec;
       const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
       const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
-      photosInCollage.push(filePath);
+      
+      const populatedPhotoInCollage: PhotoInCollageSpec = cloneDeep(photosInCollageSpec);
+      populatedPhotoInCollage.fileName = photoInCollection.fileName;
+      populatedPhotoInCollage.filePath = filePath;
+      photosInCollage.push(populatedPhotoInCollage);
     }
   }
 
@@ -67,20 +77,29 @@ const getCollagePhotos = (state: PhotoCollageState): any[] => {
 };
 
 const timeoutHandler = (dispatch: any, photoCollageState: PhotoCollageState) => {
-  const photosInCollage: any[] = getCollagePhotos(photoCollageState);
-  const photosInCollageSpec = photosInCollage.join('|');
-  dispatch(setPhotoCollageSpec(photosInCollageSpec));
+  const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(photoCollageState);
+  dispatch(setActivePopulatedPhotoCollage(photosInCollage));
+  const filePaths: string[] = photosInCollage.map( (photoInCollage) => {
+    return photoInCollage.filePath!;
+  });
+  const photosInCollageUniqueId = filePaths.join('|');
+  dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
 };
+
+let playbackTimer: any = null;
 
 export const startPlayback = () => {
   return ((dispatch: any, getState: any) => {
     dispatch(startPhotoPlayback());
-    setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState());
+    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState());
   });
 };
 
 export const stopPlayback = () => {
   return ((dispatch: any, getState: any) => {
     dispatch(stopPhotoPlayback());
+    if (!isNil(playbackTimer)) {
+      clearInterval(playbackTimer);
+    }
   });
 };

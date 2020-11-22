@@ -69,6 +69,7 @@ class PhotoCollageComponent extends React.Component<
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleSelectPhoto = this.handleSelectPhoto.bind(this);
   }
 
   componentDidMount() {
@@ -94,27 +95,25 @@ class PhotoCollageComponent extends React.Component<
     const selectedPhoto: DisplayedPhoto = this.state.selectedPhoto;
     console.log('selectedPhoto:');
     console.log(selectedPhoto);
+    // TEDTODO - are width and height scaled values?
     return (
       <div>
-        Pesto Pizza
+        <p>Selected photo:</p>
+        <p>{selectedPhoto.photoSpec.fileName}</p>
+        <p>{selectedPhoto.photoSpec.filePath}</p>
+        <p>Width</p>
+        <p>{selectedPhoto.width}</p>
+        <p>Height</p>
+        <p>{selectedPhoto.height}</p>
+        <button onClick={this.handleCloseModal}>Close Modal</button>
       </div>
     );
-    // return (
-    //   <div>
-    //     <p>Selected photo:</p>
-    //     <p>{selectedPhoto.photoInCollection.fileName}</p>
-    //     <p>Width</p>
-    //     <p>{selectedPhoto.photoInCollection.width}</p>
-    //     <p>Height</p>
-    //     <p>{selectedPhoto.photoInCollection.height}</p>
-    //     <button onClick={this.handleCloseModal}>Close Modal</button>
-    //   </div>
-    // );
   }
 
   handleSelectPhoto(selectedPhoto: any) {
     console.log('handleSelectPhoto');
     console.log(selectedPhoto);
+    this.setState({ selectedPhoto });
   }
 
   render() {
