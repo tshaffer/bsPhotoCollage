@@ -28,6 +28,8 @@ import {
   getRelativeFilePathFromPhotoInCollection
 } from '../utilities';
 
+let playbackTimer: any = null;
+
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * Math.floor(max));
 };
@@ -65,7 +67,7 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
       const { x, y, width, height } = photosInCollageSpec;
       const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
       const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
-      
+
       const populatedPhotoInCollage: PhotoInCollageSpec = cloneDeep(photosInCollageSpec);
       populatedPhotoInCollage.fileName = photoInCollection.fileName;
       populatedPhotoInCollage.filePath = filePath;
@@ -76,32 +78,27 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
   return photosInCollage;
 };
 
-const timeoutHandler = (dispatch: any, photoCollageState: PhotoCollageState) => {
-  const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(photoCollageState);
-  dispatch(setActivePopulatedPhotoCollage(photosInCollage));
-  const filePaths: string[] = photosInCollage.map( (photoInCollage) => {
-    return photoInCollage.filePath!;
-  });
-  const photosInCollageUniqueId = filePaths.join('|');
-  dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
-};
-
-let playbackTimer: any = null;
-
-export const startPlayback = () => {
+const getNextCollagePhotos = () => {
   return ((dispatch: any, getState: any) => {
-    dispatch(startPhotoPlayback());
-
-    // TEDTODO - once confirmed, put in common function
     const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
     dispatch(setActivePopulatedPhotoCollage(photosInCollage));
-    const filePaths: string[] = photosInCollage.map( (photoInCollage) => {
+    const filePaths: string[] = photosInCollage.map((photoInCollage) => {
       return photoInCollage.filePath!;
     });
     const photosInCollageUniqueId = filePaths.join('|');
     dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
-  
-    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState());
+  });
+};
+
+const timeoutHandler = (dispatch: any) => {
+  dispatch(getNextCollagePhotos());
+};
+
+export const startPlayback = () => {
+  return ((dispatch: any, getState: any) => {
+    dispatch(startPhotoPlayback());
+    dispatch(getNextCollagePhotos());
+    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
   });
 };
 
