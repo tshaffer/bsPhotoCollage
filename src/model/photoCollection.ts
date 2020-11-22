@@ -11,7 +11,6 @@ export const SET_PHOTO_COLLECTION = 'SET_PHOTO_COLLECTION';
 // ------------------------------------
 export type SetPhotoCollectionPayload = PhotoCollection;
 
-
 export const setPhotoCollection = (
   photoCollection: PhotoCollection,
 ): PhotoCollageModelBaseAction<SetPhotoCollectionPayload> => {

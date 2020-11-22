@@ -10,7 +10,7 @@ import 'flexboxgrid/dist/flexboxgrid.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import { combineReducers } from 'redux';
 import { PhotoCollageState } from './type/base';
-import { photoCollageAttributesReducer, photoCollageReducer, photoCollageSpecsReducer, photoCollectionReducer } from './model';
+import { photoCollageAttributesReducer, photoCollageReducer, photoCollageSpecsReducer, photoCollectionReducer, photoPlayerReducer } from './model';
 import { init } from './controller';
 import { PhotoCollage } from './component';
 import { readConfig } from './config';
@@ -21,7 +21,7 @@ const getStore = () => {
     photoCollageSpecs: photoCollageSpecsReducer,
     photoCollage: photoCollageReducer,
     photoCollection: photoCollectionReducer,
-
+    photoPlayer: photoPlayerReducer,
   });
   return createStore<PhotoCollageState>(
     reducers,

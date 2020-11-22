@@ -11,6 +11,7 @@ export interface PhotoCollageState {
   photoCollageSpecs: PhotoCollageSpec[];
   photoCollage: PhotoCollageItem[];
   photoCollection: PhotoCollection;
+  photoPlayer: PhotoPlayer;
 }
 
 export interface PhotoCollageAttributes {
@@ -48,6 +49,12 @@ export interface PhotoInCollection {
   fileName: string;
   height: number;
   width: number | null;
+}
+
+export interface PhotoPlayer {
+  playbackActive: boolean;
+  timeBetweenUpdates: number;
+  photoCollageSpec: string;
 }
 
 export interface DisplayedPhoto {

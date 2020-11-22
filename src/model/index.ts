@@ -6,3 +6,4 @@ export * from './photoCollage';
 export * from './photoCollageAttributes';
 export * from './photoCollageSpecs';
 export * from './photoCollection';
+export * from './photoPlayer';

@@ -8,7 +8,7 @@ import { photoCollageReducer } from './photoCollage';
 import { photoCollageAttributesReducer } from './photoCollageAttributes';
 import { photoCollageSpecsReducer } from './photoCollageSpecs';
 import { photoCollectionReducer } from './photoCollection';
-
+import { photoPlayerReducer } from './photoPlayer';
 // -----------------------------------------------------------------------
 // Reducers
 // -----------------------------------------------------------------------
@@ -17,6 +17,7 @@ export const rootReducer = combineReducers<PhotoCollageState>({
   photoCollageSpecs: photoCollageSpecsReducer,
   photoCollage: photoCollageReducer,
   photoCollection: photoCollectionReducer,
+  photoPlayer: photoPlayerReducer,
 });
 
 // -----------------------------------------------------------------------

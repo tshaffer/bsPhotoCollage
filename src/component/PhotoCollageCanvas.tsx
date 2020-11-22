@@ -14,6 +14,8 @@ import {
   PhotoInCollection,
   DisplayedPhoto,
 } from '../type';
+import { startPlayback } from '../controller';
+
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
 import {
@@ -44,6 +46,7 @@ export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromPare
   photosRootDirectory: string;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
+  onStartPlayback: () => any;
 }
 
 // -----------------------------------------------------------------------
@@ -94,6 +97,8 @@ class PhotoCollageCanvasComponent extends React.Component<
     });
 
     this.startTimer();
+
+    this.props.onStartPlayback();
   }
 
   shouldComponentUpdate(nextProps: PhotoCollageCanvasProps, nextState: PhotoCollageCanvasComponentState): boolean {
@@ -210,15 +215,14 @@ class PhotoCollageCanvasComponent extends React.Component<
       const { x, y, width, height } = photosInCollageSpec;
 
       const photoInCollection: PhotoInCollection = this.getPhoto(width >= height);
-      console.log('photo: ', photoInCollection);
-      console.log(this.props.photoCollection);
+      // console.log('photo: ', photoInCollection);
+      // console.log(this.props.photoCollection);
       // TEDTODO
       const filePath: string = getRelativeFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
       // const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
 
-      console.log('photo filePath:');
-      console.log(filePath);
-
+      // console.log('photo filePath:');
+      // console.log(filePath);
 
       const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
 
@@ -294,6 +298,7 @@ function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasP
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return bindActionCreators({
+    onStartPlayback: startPlayback,
   }, dispatch);
 };
 
