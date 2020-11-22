@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 import { photoCollageConfig } from '../config';
 
@@ -14,10 +14,10 @@ import {
   DisplayedPhoto,
   PhotoInCollageSpec,
 } from '../type';
-import { 
+import {
   startPlayback,
   stopPlayback,
- } from '../controller';
+} from '../controller';
 
 import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec, getPhotosInCollage } from '../selector';
 import { getPhotoCollection } from '../selector';
@@ -67,9 +67,6 @@ class PhotoCollageCanvasComponent extends React.Component<
   constructor(props: any) {
     super(props);
 
-    console.log('constructor');
-    console.log(props);
-
     this.state = {
       imageCount: 0,
       selectedPhoto: null,
@@ -78,6 +75,7 @@ class PhotoCollageCanvasComponent extends React.Component<
     this.photoImages = [];
 
     this.setCanvasRef = (element: any) => {
+      // debugger;
       this.canvasRef = element;
       this.ctx = element.getContext('2d');
     };
@@ -86,15 +84,13 @@ class PhotoCollageCanvasComponent extends React.Component<
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
-    // console.log(this.canvasRef);
-    // console.log(this.canvasRef.current);
-    // console.log(this.ctx);
+    console.log('PhotoCollageCanvas componentDidMount invoked');
 
     this.setState({
       imageCount: 1,
     });
 
+    console.log('invoke onStartPlayback');
     this.props.onStartPlayback();
   }
 
@@ -103,6 +99,14 @@ class PhotoCollageCanvasComponent extends React.Component<
     //   return true;
     // }
     // return false;
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    console.log('shouldComponentUpdate');
+    console.log(this.props);
+    console.log(nextProps);
+    console.log(this.state);
+    console.log(nextState);
+    console.log(currentTime);
     return true;
   }
 
@@ -165,8 +169,10 @@ class PhotoCollageCanvasComponent extends React.Component<
   renderPhotosInCollage() {
 
     const photosInCollage: PhotoInCollageSpec[] = this.props.photosInCollage;
-
-
+    if (photosInCollage.length === 0) {
+      return;
+    }
+    
     // const photoCollageFilesSpec: string = this.props.photoCollageFilesSpec;
     // const photoCollageFilesSpecs: string[] = photoCollageFilesSpec.split('|');
 
@@ -176,24 +182,26 @@ class PhotoCollageCanvasComponent extends React.Component<
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
 
-      const filePath = photosInCollage[index].filePath!;
+      if (!isNil(photosInCollage[index].filePath)) {
+        const filePath = photosInCollage[index].filePath!;
 
-      const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
+        const screenCoordinates = this.getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.width, photoCollageConfig.height);
 
-      this.photoImages.push({
-        x: screenCoordinates.x,
-        y: screenCoordinates.y,
-        width: screenCoordinates.width,
-        height: screenCoordinates.height,
-        photoSpec: photosInCollage[index],
-      });
+        this.photoImages.push({
+          x: screenCoordinates.x,
+          y: screenCoordinates.y,
+          width: screenCoordinates.width,
+          height: screenCoordinates.height,
+          photoSpec: photosInCollage[index],
+        });
 
-      this.renderPhoto(
-        'file:///' + filePath,
-        screenCoordinates.x,
-        screenCoordinates.y,
-        screenCoordinates.width,
-        screenCoordinates.height);
+        this.renderPhoto(
+          'file:///' + filePath,
+          screenCoordinates.x,
+          screenCoordinates.y,
+          screenCoordinates.width,
+          screenCoordinates.height);
+      }
 
       index++;
     }
@@ -212,20 +220,29 @@ class PhotoCollageCanvasComponent extends React.Component<
 
   render() {
 
-    console.log('render');
+    // debugger;
+    console.log('render PhotoCollageCanvas');
     console.log(this.canvasRef);
     console.log(this.state.imageCount);
 
     if (isNil(this.props.photoCollageFilesSpec) || this.props.photoCollageFilesSpec.length === 0) {
-      return null;
+      console.log('photoCollageFilesSpec empty');
+      console.log('canvasRef');
+      console.log(this.canvasRef);
+      // return null;
+    }
+    else {
+      console.log('photoCollageFilesSpec not empty');
     }
 
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
+      console.log('canvasRef and ctx nil');
       const context = this.ctx;
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
-
       this.renderPhotoCollage();
+    } else {
+      console.log('canvasRef and ctx not nil');
     }
 
     return (

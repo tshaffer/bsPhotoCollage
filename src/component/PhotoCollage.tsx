@@ -9,7 +9,6 @@ import {
   PhotoCollageState,
   PhotoCollageSpec,
   PhotoCollection,
-  PhotoInCollection,
   DisplayedPhoto,
 } from '../type';
 import { PhotoCollageCanvas } from './PhotoCollageCanvas';
@@ -25,7 +24,6 @@ import {
  } from '../selector';
 
 export interface PhotoCollageComponentState {
-  imageCount: number;
   showModal: boolean;
   selectedPhoto: DisplayedPhoto | null;
 }
@@ -52,28 +50,17 @@ class PhotoCollageComponent extends React.Component<
   PhotoCollageComponentState
   > {
 
-  canvasRef: any;
-  setCanvasRef: any;
-  ctx: any;
   photoImages: DisplayedPhoto[];
-  intervalId: any;
 
   constructor(props: any) {
     super(props);
 
     this.state = {
-      imageCount: 0,
       showModal: false,
       selectedPhoto: null,
     };
 
     this.photoImages = [];
-    this.intervalId = -1;
-
-    this.setCanvasRef = (element: any) => {
-      this.canvasRef = element;
-      this.ctx = element.getContext('2d');
-    };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -82,7 +69,7 @@ class PhotoCollageComponent extends React.Component<
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    console.log('PhotoCollage componentDidMount invoked');
   }
 
   handleOpenModal() {
@@ -144,9 +131,7 @@ class PhotoCollageComponent extends React.Component<
 
   render() {
 
-    console.log('render');
-    console.log(this.canvasRef);
-    console.log(this.state.imageCount);
+    console.log('render PhotoCollage');
 
     return (
       <div>

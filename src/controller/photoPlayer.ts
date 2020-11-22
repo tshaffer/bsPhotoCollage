@@ -91,6 +91,16 @@ let playbackTimer: any = null;
 export const startPlayback = () => {
   return ((dispatch: any, getState: any) => {
     dispatch(startPhotoPlayback());
+
+    // TEDTODO - once confirmed, put in common function
+    const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+    dispatch(setActivePopulatedPhotoCollage(photosInCollage));
+    const filePaths: string[] = photosInCollage.map( (photoInCollage) => {
+      return photoInCollage.filePath!;
+    });
+    const photosInCollageUniqueId = filePaths.join('|');
+    dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
+  
     playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState());
   });
 };
