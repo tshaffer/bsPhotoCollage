@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
-import * as fs from 'fs-extra';
 
 import { isNil } from 'lodash';
 
@@ -16,12 +15,8 @@ import {
 } from '../type';
 import { startPlayback } from '../controller';
 
-import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec, getPhotosRootDirectory } from '../selector';
+import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec } from '../selector';
 import { getPhotoCollection } from '../selector';
-import {
-  getFilePathFromPhotoInCollection,
-  getRelativeFilePathFromPhotoInCollection,
-} from '../utilities';
 
 // -----------------------------------------------------------------------
 // Types
@@ -43,7 +38,6 @@ export interface PhotoCollageCanvasComponentState {
 /** @internal */
 /** @private */
 export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
-  photosRootDirectory: string;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
   photoCollageFilesSpec: string;
@@ -97,8 +91,6 @@ class PhotoCollageCanvasComponent extends React.Component<
       imageCount: 1,
     });
 
-    this.startTimer();
-
     this.props.onStartPlayback();
   }
 
@@ -108,38 +100,6 @@ class PhotoCollageCanvasComponent extends React.Component<
     // }
     // return false;
     return true;
-  }
-
-  startTimer(): void {
-    const timeoutEventCallbackParams: any = {
-      photoCollageComponent: this,
-    };
-
-    this.intervalId = setInterval(this.handleTimeout, 10000, timeoutEventCallbackParams);
-  }
-
-  getRandomInt(max: number): number {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
-
-  getPhoto(landscape: boolean): PhotoInCollection {
-
-    const photosInCollection: PhotoInCollection[] = this.props.photoCollection.photosInCollection!;
-    const numPhotos = photosInCollection.length;
-
-    while (true) {
-      const randomInt = this.getRandomInt(numPhotos);
-      const photoInCollection: PhotoInCollection = photosInCollection[randomInt];
-      if (!isNil(photoInCollection.height)) {
-        const landscapeOrientation: boolean = photoInCollection.width! >= photoInCollection.height;
-        if (landscape === landscapeOrientation) {
-          const filePath: string = getFilePathFromPhotoInCollection(this.props.photosRootDirectory, photoInCollection);
-          if (fs.pathExistsSync(filePath)) {
-            return photoInCollection;
-          }
-        }
-      }
-    }
   }
 
   renderPhoto(filePath: string, x: number, y: number, width: number, height: number) {
@@ -166,15 +126,6 @@ class PhotoCollageCanvasComponent extends React.Component<
       width: (width / collageWidth) * screenWidth,
       height: (height / collageHeight) * screenHeight,
     };
-  }
-
-  handleTimeout(photoCollageComponent: any) {
-    console.log('timeoutHandler invoked');
-    console.log(photoCollageComponent.photoCollageComponent);
-    console.log(Object.keys(photoCollageComponent.photoCollageComponent));
-    photoCollageComponent.photoCollageComponent.setState({
-      imageCount: photoCollageComponent.photoCollageComponent.state.imageCount + 1,
-    });
   }
 
   handleClick(e: any) {
@@ -291,7 +242,6 @@ class PhotoCollageCanvasComponent extends React.Component<
 
 function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasPropsFromParent): Partial<PhotoCollageCanvasProps> {
   return {
-    photosRootDirectory: getPhotosRootDirectory(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
     photoCollageFilesSpec: getPhotoCollageFilesSpec(state),
