@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
-import * as fs from 'fs-extra';
 import Modal from 'react-modal';
 
 import { isNil } from 'lodash';
-
-import { photoCollageConfig } from '../config';
 
 import {
   PhotoCollageState,
@@ -19,10 +16,6 @@ import { PhotoCollageCanvas } from './PhotoCollageCanvas';
 
 import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
 import { getPhotoCollection } from '../selector';
-import {
-  getFilePathFromPhotoInCollection,
-  getRelativeFilePathFromPhotoInCollection,
-} from '../utilities';
 
 export interface PhotoCollageComponentState {
   imageCount: number;
@@ -82,24 +75,12 @@ class PhotoCollageComponent extends React.Component<
     console.log('componentDidMount');
   }
 
-  shouldComponentUpdate(nextProps: PhotoCollageProps, nextState: PhotoCollageComponentState): boolean {
-    // if (this.state.imageCount !== nextState.imageCount) {
-    //   return true;
-    // }
-    // if (this.state.showModal !== nextState.showModal) {
-    //   return true;
-    // }
-    // return false;
-    return true;
-  }
-
   handleOpenModal() {
     this.setState({ showModal: true });
   }
 
   handleCloseModal() {
     this.setState({ showModal: false });
-    // this.startTimer();
   }
 
   renderDialog(): any {
@@ -111,17 +92,24 @@ class PhotoCollageComponent extends React.Component<
       );
     }
     const selectedPhoto: DisplayedPhoto = this.state.selectedPhoto;
+    console.log('selectedPhoto:');
+    console.log(selectedPhoto);
     return (
       <div>
-        <p>Selected photo:</p>
-        <p>{selectedPhoto.photoInCollection.fileName}</p>
-        <p>Width</p>
-        <p>{selectedPhoto.photoInCollection.width}</p>
-        <p>Height</p>
-        <p>{selectedPhoto.photoInCollection.height}</p>
-        <button onClick={this.handleCloseModal}>Close Modal</button>
+        Pesto Pizza
       </div>
     );
+    // return (
+    //   <div>
+    //     <p>Selected photo:</p>
+    //     <p>{selectedPhoto.photoInCollection.fileName}</p>
+    //     <p>Width</p>
+    //     <p>{selectedPhoto.photoInCollection.width}</p>
+    //     <p>Height</p>
+    //     <p>{selectedPhoto.photoInCollection.height}</p>
+    //     <button onClick={this.handleCloseModal}>Close Modal</button>
+    //   </div>
+    // );
   }
 
   handleSelectPhoto(selectedPhoto: any) {

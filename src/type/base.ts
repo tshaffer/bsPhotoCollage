@@ -62,5 +62,5 @@ export interface DisplayedPhoto {
   y: number;
   width: number;
   height: number;
-  photoInCollection: PhotoInCollection;
+  // photoInCollection: PhotoInCollection;
 }
