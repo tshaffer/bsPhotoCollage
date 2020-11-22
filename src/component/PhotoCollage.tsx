@@ -113,7 +113,10 @@ class PhotoCollageComponent extends React.Component<
   handleSelectPhoto(selectedPhoto: any) {
     console.log('handleSelectPhoto');
     console.log(selectedPhoto);
-    this.setState({ selectedPhoto });
+    this.setState({
+      selectedPhoto,
+      showModal: true,
+    });
   }
 
   render() {
