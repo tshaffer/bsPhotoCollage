@@ -37,7 +37,6 @@ export interface PhotoCollageCanvasPropsFromParent {
 /** @internal */
 /** @private */
 export interface PhotoCollageCanvasComponentState {
-  imageCount: number;
   selectedPhoto: DisplayedPhoto | null;
 }
 
@@ -69,7 +68,6 @@ class PhotoCollageCanvasComponent extends React.Component<
     super(props);
 
     this.state = {
-      imageCount: 0,
       selectedPhoto: null,
     };
 
@@ -84,11 +82,6 @@ class PhotoCollageCanvasComponent extends React.Component<
   }
 
   componentDidMount() {
-
-    this.setState({
-      imageCount: 1,
-    });
-
     this.props.onStartPlayback();
   }
 
