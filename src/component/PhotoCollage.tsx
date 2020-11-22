@@ -14,8 +14,15 @@ import {
 } from '../type';
 import { PhotoCollageCanvas } from './PhotoCollageCanvas';
 
-import { getActivePhotoCollageSpec, getPhotosRootDirectory } from '../selector';
-import { getPhotoCollection } from '../selector';
+import {
+  startPlayback,
+} from '../controller';
+
+import { 
+  getActivePhotoCollageSpec,
+  getPhotoCollection,
+  getPhotosRootDirectory
+ } from '../selector';
 
 export interface PhotoCollageComponentState {
   imageCount: number;
@@ -33,6 +40,7 @@ export interface PhotoCollageProps {
   photosRootDirectory: string;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
+  onStartPlayback: () => any;
 }
 
 // -----------------------------------------------------------------------
@@ -69,6 +77,7 @@ class PhotoCollageComponent extends React.Component<
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleCloseModalResumePlayback = this.handleCloseModalResumePlayback.bind(this);
     this.handleSelectPhoto = this.handleSelectPhoto.bind(this);
   }
 
@@ -84,6 +93,11 @@ class PhotoCollageComponent extends React.Component<
     this.setState({ showModal: false });
   }
 
+  handleCloseModalResumePlayback() {
+    this.setState({ showModal: false });
+    this.props.onStartPlayback();
+  }
+
   renderDialog(): any {
     if (isNil(this.state.selectedPhoto)) {
       return (
@@ -95,7 +109,7 @@ class PhotoCollageComponent extends React.Component<
     const selectedPhoto: DisplayedPhoto = this.state.selectedPhoto;
     console.log('selectedPhoto:');
     console.log(selectedPhoto);
-    // TEDTODO - are width and height scaled values?
+    // TEDTODO - are width and height scaled values vs. file values?
     return (
       <div>
         <p>Selected photo:</p>
@@ -105,7 +119,15 @@ class PhotoCollageComponent extends React.Component<
         <p>{selectedPhoto.width}</p>
         <p>Height</p>
         <p>{selectedPhoto.height}</p>
-        <button onClick={this.handleCloseModal}>Close Modal</button>
+        <button onClick={this.handleCloseModalResumePlayback}>Resume</button>
+        <button
+          style={{
+            marginLeft: '16px'
+          }}
+          onClick={this.handleCloseModal}
+        >
+          Close
+        </button>
       </div>
     );
   }
@@ -113,6 +135,7 @@ class PhotoCollageComponent extends React.Component<
   handleSelectPhoto(selectedPhoto: any) {
     console.log('handleSelectPhoto');
     console.log(selectedPhoto);
+    Modal.setAppElement('#collageCanvas');
     this.setState({
       selectedPhoto,
       showModal: true,
@@ -180,6 +203,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
   return bindActionCreators({
+    onStartPlayback: startPlayback,
   }, dispatch);
 };
 
