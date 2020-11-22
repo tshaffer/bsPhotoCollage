@@ -7,8 +7,6 @@ import { isNil } from 'lodash';
 
 import {
   PhotoCollageState,
-  PhotoCollageSpec,
-  PhotoCollection,
   DisplayedPhoto,
 } from '../type';
 import { PhotoCollageCanvas } from './PhotoCollageCanvas';
@@ -16,12 +14,6 @@ import { PhotoCollageCanvas } from './PhotoCollageCanvas';
 import {
   startPlayback,
 } from '../controller';
-
-import { 
-  getActivePhotoCollageSpec,
-  getPhotoCollection,
-  getPhotosRootDirectory
- } from '../selector';
 
 export interface PhotoCollageComponentState {
   showModal: boolean;
@@ -35,9 +27,6 @@ export interface PhotoCollageComponentState {
 /** @internal */
 /** @private */
 export interface PhotoCollageProps {
-  photosRootDirectory: string;
-  photoCollection: PhotoCollection;
-  photoCollageSpec: PhotoCollageSpec | null;
   onStartPlayback: () => any;
 }
 
@@ -50,8 +39,6 @@ class PhotoCollageComponent extends React.Component<
   PhotoCollageComponentState
   > {
 
-  photoImages: DisplayedPhoto[];
-
   constructor(props: any) {
     super(props);
 
@@ -59,8 +46,6 @@ class PhotoCollageComponent extends React.Component<
       showModal: false,
       selectedPhoto: null,
     };
-
-    this.photoImages = [];
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -94,8 +79,7 @@ class PhotoCollageComponent extends React.Component<
       );
     }
     const selectedPhoto: DisplayedPhoto = this.state.selectedPhoto;
-    console.log('selectedPhoto:');
-    console.log(selectedPhoto);
+
     // TEDTODO - are width and height scaled values vs. file values?
     return (
       <div>
@@ -120,8 +104,6 @@ class PhotoCollageComponent extends React.Component<
   }
 
   handleSelectPhoto(selectedPhoto: any) {
-    console.log('handleSelectPhoto');
-    console.log(selectedPhoto);
     Modal.setAppElement('#collageCanvas');
     this.setState({
       selectedPhoto,
@@ -130,8 +112,6 @@ class PhotoCollageComponent extends React.Component<
   }
 
   render() {
-
-    console.log('render PhotoCollage');
 
     return (
       <div>
@@ -180,9 +160,6 @@ class PhotoCollageComponent extends React.Component<
 
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageProps> {
   return {
-    photosRootDirectory: getPhotosRootDirectory(state),
-    photoCollection: getPhotoCollection(state),
-    photoCollageSpec: getActivePhotoCollageSpec(state),
   };
 }
 

@@ -10,7 +10,6 @@ import {
   PhotoCollageState,
   PhotoCollageSpec,
   PhotoCollection,
-  PhotoInCollection,
   DisplayedPhoto,
   PhotoInCollageSpec,
 } from '../type';
@@ -19,8 +18,11 @@ import {
   stopPlayback,
 } from '../controller';
 
-import { getActivePhotoCollageSpec, getPhotoCollageFilesSpec, getPhotosInCollage } from '../selector';
-import { getPhotoCollection } from '../selector';
+import {
+  getActivePhotoCollageSpec,
+  getPhotoCollection,
+  getPhotosInCollage
+} from '../selector';
 
 // -----------------------------------------------------------------------
 // Types
@@ -44,7 +46,6 @@ export interface PhotoCollageCanvasComponentState {
 export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
-  photoCollageFilesSpec: string;
   photosInCollage: PhotoInCollageSpec[];
   onStartPlayback: () => any;
   onStopPlayback: () => any;
@@ -75,7 +76,6 @@ class PhotoCollageCanvasComponent extends React.Component<
     this.photoImages = [];
 
     this.setCanvasRef = (element: any) => {
-      // debugger;
       this.canvasRef = element;
       this.ctx = element.getContext('2d');
     };
@@ -84,30 +84,12 @@ class PhotoCollageCanvasComponent extends React.Component<
   }
 
   componentDidMount() {
-    console.log('PhotoCollageCanvas componentDidMount invoked');
 
     this.setState({
       imageCount: 1,
     });
 
-    console.log('invoke onStartPlayback');
     this.props.onStartPlayback();
-  }
-
-  shouldComponentUpdate(nextProps: PhotoCollageCanvasProps, nextState: PhotoCollageCanvasComponentState): boolean {
-    // if (this.state.imageCount !== nextState.imageCount) {
-    //   return true;
-    // }
-    // return false;
-
-    const currentTime = Math.floor(Date.now() / 1000);
-    console.log('shouldComponentUpdate');
-    console.log(this.props);
-    console.log(nextProps);
-    console.log(this.state);
-    console.log(nextState);
-    console.log(currentTime);
-    return true;
   }
 
   renderPhoto(filePath: string, x: number, y: number, width: number, height: number) {
@@ -145,17 +127,12 @@ class PhotoCollageCanvasComponent extends React.Component<
     const x = e.pageX - elemLeft;
     const y = e.pageY - elemTop;
 
-    // Get selected photo
     let index = 0;
     for (const photoImage of this.photoImages) {
       if (y > photoImage.y && y < photoImage.y + photoImage.height
         && x > photoImage.x && x < photoImage.x + photoImage.width) {
-        console.log('clicked photo with index');
-        console.log(index);
-
         this.props.onStopPlayback();
         this.props.onSelectPhoto(photoImage);
-
         return;
       }
       index++;
@@ -172,9 +149,6 @@ class PhotoCollageCanvasComponent extends React.Component<
     if (photosInCollage.length === 0) {
       return;
     }
-    
-    // const photoCollageFilesSpec: string = this.props.photoCollageFilesSpec;
-    // const photoCollageFilesSpecs: string[] = photoCollageFilesSpec.split('|');
 
     this.photoImages = [];
     const { collageWidth, collageHeight, photosInCollageSpecs } = this.props.photoCollageSpec!;
@@ -212,7 +186,6 @@ class PhotoCollageCanvasComponent extends React.Component<
       isNil(this.props.photoCollection) ||
       isNil(this.props.photoCollection!.photosInCollection) ||
       this.props.photoCollection.photosInCollection.length === 0) {
-      console.log('no photoCollageSpec or no photosInCollection');
       return;
     }
     this.renderPhotosInCollage();
@@ -220,29 +193,11 @@ class PhotoCollageCanvasComponent extends React.Component<
 
   render() {
 
-    // debugger;
-    console.log('render PhotoCollageCanvas');
-    console.log(this.canvasRef);
-    console.log(this.state.imageCount);
-
-    if (isNil(this.props.photoCollageFilesSpec) || this.props.photoCollageFilesSpec.length === 0) {
-      console.log('photoCollageFilesSpec empty');
-      console.log('canvasRef');
-      console.log(this.canvasRef);
-      // return null;
-    }
-    else {
-      console.log('photoCollageFilesSpec not empty');
-    }
-
     if (!isNil(this.canvasRef) && !isNil(this.ctx)) {
-      console.log('canvasRef and ctx nil');
       const context = this.ctx;
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, this.canvasRef.width, this.canvasRef.height);
       this.renderPhotoCollage();
-    } else {
-      console.log('canvasRef and ctx not nil');
     }
 
     return (
@@ -268,7 +223,6 @@ function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasP
   return {
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
-    photoCollageFilesSpec: getPhotoCollageFilesSpec(state),
     photosInCollage: getPhotosInCollage(state),
     onSelectPhoto: ownProps.onSelectPhoto,
   };
